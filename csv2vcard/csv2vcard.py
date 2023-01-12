@@ -25,6 +25,10 @@ def test_csv2vcard():
         "website": "https://www.linkedin.com/in/forrestgump",
         "street": "42 Plantation St.", "city": "Baytown", "p_code": "30314",
         "country": "United States of America"
+        "phone_cell": "917 777 7777"
+        "email_home": "forrestgump@examplehome.com"
+        "bday": "12/03/1965"
+        "note": "This wroks!!!!!!!!"
     }]
     check_export()
     vcard = create_vcard(mock_contacts[0])
