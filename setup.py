@@ -14,7 +14,7 @@ setup(
   author = 'ReallyCoolData',
   author_email = 'N/A',
   url = 'https://github.com/ReallyCoolData/csv2vcard', 
-  download_url = 'https://github.com/ReallyCoolData/csv2vcard/archive/refs/tags/0.1.tar.gz',
+  download_url = 'https://github.com/ReallyCoolData/csv2vcard/archive/refs/tags/0.2.3.tar.gz',
   keywords = ['csv', 'vcard', 'export'],
   python_requires = '>=3.6',
   classifiers = [
