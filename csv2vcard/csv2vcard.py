@@ -24,10 +24,10 @@ def test_csv2vcard():
         "phone": "+49 170 5 25 25 25", "email": "forrestgump@example.com",
         "website": "https://www.linkedin.com/in/forrestgump",
         "street": "42 Plantation St.", "city": "Baytown", "p_code": "30314",
-        "country": "United States of America"
-        "phone_cell": "+19177777777"
-        "email_home": "forrestgump@examplehome.com"
-        "bday": "12/03/1965"
+        "country": "United States of America",
+        "phone_cell": "+19177777777",
+        "email_home": "forrestgump@examplehome.com",
+        "bday": "12/03/1965",
         "note": "This wroks!!!!!!!!"
     }]
     check_export()
