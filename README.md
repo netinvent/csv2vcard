@@ -7,7 +7,9 @@ A Python script that parses a .csv file of contacts and automatically creates vC
 Usage
 -----
 
-1. Install package with `pip3 install csv2vcard`
+1. Install package with `pip3 install csv2vcard` installs the original package
+
+1a. Install package with `pip install git+https://github.com/ReallyNameHere/csv2vcard.git@0.2.3` installs the package with the updated fields for  home address personal email & mobile
 
 2. Create csv file with contacts
 
@@ -15,7 +17,7 @@ Usage
 
 `last_name, first_name, org, title, phone, email, website, street, city, p_code, country`
 
-**Important: you should name the columns exactly the same way because they are used as keys to generate the vCards**
+**Important: you should NAME the columns EXCATLY the same way because they are used as keys to generate the vCards But it is not required to reorder the columns. This script will find the columns based on the NAME**
 
 3. `cd yourcsvfoldername` go to the folder where you have your csv file
 
