@@ -27,6 +27,7 @@ def test_csv2vcard():
         "country": "United States of America",
         "phone_cell": "+19177777777",
         "email_home": "forrestgump@examplehome.com",
+        "street_home": "600 Main St.", "city_home": "Brooklynn", "p_code_home": "13458",
         "bday": "12/03/1965",
         "note": "This works!!!!!!!!"
     }]
