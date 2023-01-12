@@ -28,7 +28,7 @@ def test_csv2vcard():
         "phone_cell": "+19177777777",
         "email_home": "forrestgump@examplehome.com",
         "bday": "12/03/1965",
-        "note": "This wroks!!!!!!!!"
+        "note": "This works!!!!!!!!"
     }]
     check_export()
     vcard = create_vcard(mock_contacts[0])
