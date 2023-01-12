@@ -12,8 +12,8 @@ def create_vcard(contact: dict):
     vc_website = f"URL;TYPE=WORK:{contact['website']}\n"
     vc_address = f"ADR;TYPE=WORK;CHARSET=UTF-8:{contact['street']};{contact['city']};{contact['p_code']};{contact['country']}\n"
     #These fields have been added to the original code
-    vc_phone = f"TEL;TYPE=CELL,VOICE:{contact['phone_cell']}\n"
-    vc_email = f"EMAIL;TYPE=HOME:{contact['email_home']}\n"
+    vc_phone_cell = f"TEL;TYPE=CELL,VOICE:{contact['phone_cell']}\n"
+    vc_email_home = f"EMAIL;TYPE=HOME:{contact['email_home']}\n"
     #end of new fields
     vc_end = "END:VCARD\n"
     
