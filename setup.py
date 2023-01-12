@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 setup(
   name = 'csv2vcard',
   packages = ['csv2vcard'],
-  version = '0.3.0',
+  version = '0.3.1',
   description = 'A library for converting csvs to vCards',
   long_description = README,
   long_description_content_type='text/markdown',
