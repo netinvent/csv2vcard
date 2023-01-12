@@ -22,7 +22,7 @@ def create_vcard(contact: dict):
 
     vc_filename = f"{contact['last_name'].lower()}_{contact['first_name'].lower()}.vcf"
     #I added to this line below
-    vc_output = vc_begin + vc_version + vc_name + vc_title + vc_org + vc_phone + vc_email + vc_website + vc_address + vc_phone_cell + vc_email_home + + vc_bday + vc_note + vc_end
+    vc_output = vc_begin + vc_version + vc_name + vc_title + vc_org + vc_phone + vc_email + vc_website + vc_address + vc_phone_cell + vc_email_home + vc_bday + vc_note + vc_end
 
     vc_final = {
         "filename" : vc_filename,
