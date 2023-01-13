@@ -3,20 +3,20 @@ def create_vcard(contact: dict):
     The mappings used below are from https://www.w3.org/TR/vcard-rdf/#Mapping
     """
     vc_begin = "BEGIN:VCARD\n"
-    vc_version = "VERSION:3.0\n"
-    vc_name = f"N;CHARSET=UTF-8:{contact['last_name']};{contact['first_name']};;;\n"
-    vc_title = f"TITLE;CHARSET=UTF-8:{contact['title']}\n"
-    vc_org = f"ORG;CHARSET=UTF-8:{contact['org']}\n"
+    vc_version = "VERSION:4.0\n"
+    vc_name = f"N:{contact['last_name']};{contact['first_name']};;;\n"
+    vc_title = f"TITLE:{contact['title']}\n"
+    vc_org = f"ORG:{contact['org']}\n"
     vc_phone = f"TEL;TYPE=WORK,VOICE:{contact['phone']}\n"
     vc_email = f"EMAIL;TYPE=WORK:{contact['email']}\n"
     vc_website = f"URL;TYPE=WORK:{contact['website']}\n"
-    vc_address = f"ADR;TYPE=WORK;CHARSET=UTF-8:{contact['street']};{contact['city']};{contact['p_code']};{contact['country']}\n"
+    vc_address = f"ADR;TYPE=WORK:{contact['street']};{contact['city']};{contact['p_code']};{contact['country']}\n"
     #These fields have been added to the original code
     vc_phone_cell = f"TEL;TYPE=CELL,VOICE:{contact['phone_cell']}\n"
     vc_email_home = f"EMAIL;TYPE=HOME:{contact['email_home']}\n"
-    vc_address_home = f"ADR;TYPE=HOME;CHARSET=UTF-8:{contact['street_home']};{contact['city_home']};{contact['p_code_home']};{contact['country_home']}\n"
-    vc_bday = f"BDAY;CHARSET=UTF-8:{contact['bday']}\n"
-    vc_note = f"NOTE;CHARSET=UTF-8:{contact['note']}\n"
+    vc_address_home = f"ADR;TYPE=HOME:{contact['street_home']};{contact['city_home']};{contact['p_code_home']};{contact['country_home']}\n"
+    vc_bday = f"BDAY:{contact['bday']}\n"
+    vc_note = f"NOTE:{contact['note']}\n"
     #end of new fields
     vc_end = "END:VCARD\n"
     
