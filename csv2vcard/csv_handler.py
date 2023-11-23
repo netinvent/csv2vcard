@@ -38,7 +38,7 @@ def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None) -> di
         return []
 
 
-def csv2vcard(csv_filename: str, csv_delimiter: str = ';', encoding: str = None, output_dir: str = None, vcard_version: int = 4, single_vcard_file: bool = False) -> None:
+def csv2vcard(csv_filename: str, csv_delimiter: str = ';', mapping_file: str = None, encoding: str = None, output_dir: str = None, vcard_version: int = 4, single_vcard_file: bool = False) -> None:
     """
     Main function
     """
@@ -46,11 +46,12 @@ def csv2vcard(csv_filename: str, csv_delimiter: str = ';', encoding: str = None,
 
     vcards = ""
     for contact in parse_csv(csv_filename, csv_delimiter, encoding):
-        vcard, filename = create_vcard(contact, vcard_version)
-        if single_vcard_file:
-            export_vcard(vcard, output_dir, filename)
-        else:
-            vcards += "\n" + vcard['content']
+        vcard, filename = create_vcard(contact, vcard_version, mapping_file)
+        if vcard:
+            if single_vcard_file:
+                export_vcard(vcard, output_dir, filename)
+            else:
+                vcards += "\n" + vcard
     if not single_vcard_file:
         export_vcard(vcards, output_dir, os.path.basename(csv_filename) + ".vcf")
 
