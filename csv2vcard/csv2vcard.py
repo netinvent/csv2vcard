@@ -1,20 +1,26 @@
-from csv2vcard.export_vcard import check_export, export_vcard
+import os
+from csv2vcard.export_vcard import check_export_dir, export_vcard
 from csv2vcard.create_vcard import create_vcard
 from csv2vcard.parse_csv import parse_csv
 
 
-def csv2vcard(csv_filename: str, csv_delimeter: str):
+def csv2vcard(csv_filename: str, csv_delimeter: str = ';', output_dir: str = None, single_vcard_file: bool = False) -> None:
     """
     Main function
     """
-    check_export()
+    check_export_dir(output_dir)
 
-    for c in parse_csv(csv_filename, csv_delimeter):
-        vcard = create_vcard(c)
-        export_vcard(vcard)
+    vcards = ""
+    for contact in parse_csv(csv_filename, csv_delimeter):
+        vcard, filename = create_vcard(contact)
+        if single_vcard_file:
+            export_vcard(vcard, output_dir, filename)
+        else:
+            vcards += "\n" + vcard['content']
+    if not single_vcard_file:
+        export_vcard(vcards, output_dir, os.path.basename(csv_filename) + ".vcf")
 
-
-def test_csv2vcard():
+def test_csv2vcard(version: int = 4):
     """
     Try it out with this mock Forrest Gump contact
     """
@@ -32,7 +38,9 @@ def test_csv2vcard():
         "bday": "12/03/1965",
         "note": "This works!!!!!!!!"
     }]
-    check_export()
-    vcard = create_vcard(mock_contacts[0])
+    
+    output_dir = "."
+    check_export_dir(output_dir)
+    vcard, filename = create_vcard(mock_contacts[0], version)
     print(vcard)
-    export_vcard(vcard)
+    export_vcard(vcard, output_dir, filename)
