@@ -12,6 +12,6 @@ def parse_csv(csv_filename: str, csv_delimeter: str):
             header = next(contacts)  # saves header
             parsed_contacts = [dict(zip(header, row)) for row in contacts]
             return parsed_contacts
-    except IOError:
-        print(f"I/O error for {csv_filename}")
+    except OSError as exc:
+        print(f"OS error for {csv_filename}: {exc}")
         return []
