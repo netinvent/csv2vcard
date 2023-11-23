@@ -1,18 +1,35 @@
 import os
 from csv2vcard.export_vcard import check_export_dir, export_vcard
 from csv2vcard.create_vcard import create_vcard
-from csv2vcard.parse_csv import parse_csv
+import csv
+import codecs
 
 
-def csv2vcard(csv_filename: str, csv_delimeter: str = ';', output_dir: str = None, single_vcard_file: bool = False) -> None:
+def parse_csv(csv_filename: str, csv_delimiter: str):
+    """
+    Simple csv parser with a ; delimiter
+    """
+    print("Parsing csv..")
+    try:
+        with open(f"{csv_filename}", "r", encoding="utf-8") as fh:
+            contacts = csv.reader(fh, delimiter=csv_delimiter)
+            header = next(contacts)  # saves header
+            parsed_contacts = [dict(zip(header, row)) for row in contacts]
+            return parsed_contacts
+    except OSError as exc:
+        print(f"OS error for {csv_filename}: {exc}")
+        return []
+
+
+def csv2vcard(csv_filename: str, csv_delimiter: str = ';', output_dir: str = None, vcard_version: int = 4, single_vcard_file: bool = False) -> None:
     """
     Main function
     """
     check_export_dir(output_dir)
 
     vcards = ""
-    for contact in parse_csv(csv_filename, csv_delimeter):
-        vcard, filename = create_vcard(contact)
+    for contact in parse_csv(csv_filename, csv_delimiter):
+        vcard, filename = create_vcard(contact, vcard_version)
         if single_vcard_file:
             export_vcard(vcard, output_dir, filename)
         else:
