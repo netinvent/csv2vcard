@@ -1,0 +1,50 @@
+{
+    "ADR": {
+        "TYPE": {
+            "HOME": ["Boîte postale du domicile", "Rue (domicile)", "Ville (domicile)", null, "Code postal (domicile)", "Pays/Région (domicile)"],
+            "WORK": ["B.P. professionnelle", "Rue (bureau)", "Ville (bureau)", null, "Code postal (bureau)", "Pays/Région (bureau)"]
+        }
+    },
+    "ANNIVERSARY": "Anniversaire de mariage ou fête",
+    "BDAY": "Anniversaire",
+    "CATEGORIES": "Passe-temps",
+    "EMAIL": {
+        "TYPE": {
+            "HOME": "Adresse de messagerie",
+            "WORK": "Adresse de messagerie 2"
+        }
+    },
+    "FN": ["Titre", "Nom", "Prénom"],
+    "GENDER": "Sexe",
+    "GEO": null,
+    "KEY": null,
+    "LOGO": null,
+    "N": ["Nom", "Prénom", "Deuxième prénom", "Titre", "Suffixe"],
+    "NOTE": "Notes",
+    "NICKNAME": "Surnom",
+    "ORG": "Société",
+    "PHOTO": null,
+    "ROLE": "Profession",
+    "TEL": {
+        "TYPE": {
+            "HOME,CELL": "Tél. mobile",
+            "HOME,FAX": "Télécopie (domicile)",
+            "HOME,PAGER": null,
+            "HOME,VOICE": "Téléphone (domicile)",
+            "HOME,VIDEO": null,
+            "HOME,TEXTPHONE": null,
+            "HOME,TEXT": null,
+            "WORK,CELL": null,
+            "WORK,FAX": "Télécopie (bureau)",
+            "WORK,PAGER": "Télex",
+            "WORK,VOICE": "Téléphone (bureau)",
+            "WORK,VIDEO": null,
+            "WORK,TEXTPHONE": null,
+            "WORK,TEXT": null
+        }
+    },
+    "TITLE": "Titre",
+    "TZ": null,
+    "UID": null,
+    "URL": "Page Web"
+}
