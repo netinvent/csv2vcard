@@ -47,7 +47,7 @@ There's no need for those columns to be in a specific order for the script to wo
 
 `csv2vcard` accepts the following custom parameters:
 
-|----------------------------------------------------|------------------------------------------------------------|
+
 | Parameter                                          | Role                                                       |
 |----------------------------------------------------|------------------------------------------------------------|
 | -s|--source <path to dir or file>                  | Adds one or multiple (recursive) CSV files to job          |
@@ -60,7 +60,7 @@ There's no need for those columns to be in a specific order for the script to wo
 | --encoding <python known encoding string>          | Replaces automagically detected file encoding              |
 | -m|--mapping <path_to_json_mapping_file>           | Replaces default mapping with custom one (see below)       |
 | --strip-acccents                                   | Removes any accents from vCard, for max compatibility      |
-|-----------------------------------------------------------------------------------------------------------------|
+
 
 ## Custom mappings
 
