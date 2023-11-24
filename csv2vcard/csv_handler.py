@@ -59,6 +59,7 @@ def csv2vcard(
     output_dir: str = None,
     vcard_version: int = 4,
     single_vcard_file: bool = False,
+    max_vcard_file_size: int = None,
 ) -> None:
     """
     Main function
@@ -66,12 +67,23 @@ def csv2vcard(
     check_export_dir(output_dir)
 
     vcards = ""
+    if max_vcard_file_size:
+        # Make sure we are counting in KB
+        max_vcard_file_size *= 1024
+        file_num = "1"
+    else:
+        max_vcard_file_size = ""
     for contact in parse_csv(csv_filename, csv_delimiter, encoding):
         vcard, filename = create_vcard(contact, vcard_version, mapping_file)
         if vcard:
-            if single_vcard_file:
+            if not single_vcard_file:
                 export_vcard(vcard, output_dir, filename)
             else:
                 vcards += "\n" + vcard
-    if not single_vcard_file:
-        export_vcard(vcards, output_dir, os.path.basename(csv_filename) + ".vcf")
+                if len(vcards) > max_vcard_file_size:
+                    print(f"Creating sub file for {csv_filename}")
+                    export_vcard(vcards, output_dir, os.path.basename(csv_filename) + f"{file_num}.vcf")
+                    file_num = str(int(file_num) + 1)
+                    vcards = ""
+    if single_vcard_file:
+        export_vcard(vcards, output_dir, os.path.basename(csv_filename) + f"{file_num}.vcf")

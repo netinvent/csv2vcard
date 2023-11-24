@@ -190,7 +190,6 @@ def create_vcard(
                             fn_entry += data.strip()
                         except KeyError:
                             print(f"1011: CSV file has no key {sub_key}")
-                print(fn_entry)
                 if not fn_entry.strip():
                     print(f"1012: No Valid FN entry for {contact}")
                 else:
