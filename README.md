@@ -1,4 +1,4 @@
-[![Downloads](http://pepy.tech/badge/csv2vcard)](http://pepy.tech/count/csv2vcard)0)
+[![Downloads](http://pepy.tech/badge/csv2vcard)](http://pepy.tech/count/csv2vcard)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/netinvent/csv2vcard.svg)](http://isitmaintained.com/project/netinvent/csv2vcard "Percentage of issues still open")
 [![GitHub Release](https://img.shields.io/github/release/netinvent/csv2vcard.svg?label=Latest)](https://github.com/netinvent/csv2vcard/releases/latest)
 [![Windows linter](https://github.com/netinvent/csv2vcard/actions/workflows/pylint-windows.yaml/badge.svg)](https://github.com/netinvent/csv2vcard/actions/workflows/pylint-windows.yaml)
