@@ -110,7 +110,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.6",
         "Topic :: Utilities",
     ],
-    python_requires=">=3.6",
     scripts=scripts,
     entry_points={
         "console_scripts": console_scripts,
