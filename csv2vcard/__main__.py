@@ -114,6 +114,7 @@ This is free software, and you are welcome to redistribute it under certain cond
     print(version_string)
 
     source = pathlib.Path(args.source)
+    sources = []
     if not os.path.exists(source):
         sys.exit(202)
     elif os.path.isdir(source):
