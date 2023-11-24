@@ -9,8 +9,8 @@ import os
 import pkg_resources
 import setuptools
 
-PACKAGE_NAME="csv2vcard"
-DESCRIPTION="CLI tool to convert CSV files into vcards"
+PACKAGE_NAME = "csv2vcard"
+DESCRIPTION = "CLI tool to convert CSV files into vcards"
 
 
 def _read_file(filename):
@@ -69,7 +69,7 @@ def parse_requirements(filename):
         )
 
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
+with open(os.path.join(os.path.dirname(__file__), "README.md")) as readme:
     README = readme.read()
 
 package_path = os.path.abspath(PACKAGE_NAME)
@@ -82,36 +82,37 @@ requirements = parse_requirements(os.path.join(package_path, "requirements.txt")
 long_description = _read_file("README.md")
 
 if os.name == "nt":
-  scripts = ["misc/csv2vcard.cmd"]
-  console_scripts = []
+    scripts = ["misc/csv2vcard.cmd"]
+    console_scripts = []
 else:
-  scripts = []
-  console_scripts = ["csv2vcard = csv2vcard.__main__:main"]
+    scripts = []
+    console_scripts = ["csv2vcard = csv2vcard.__main__:main"]
 
 setuptools.setup(
-  name = PACKAGE_NAME,
-  packages=setuptools.find_packages(),
-  version=metadata["version"],
-  install_requires=requirements,
-  description = DESCRIPTION,
-  long_description = long_description,
-  long_description_content_type='text/markdown',
-  author = 'NetInvent & ReallyCoolData & Nikolay Dimolarov',
+    name=PACKAGE_NAME,
+    packages=setuptools.find_packages(),
+    version=metadata["version"],
+    install_requires=requirements,
+    description=DESCRIPTION,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    author="NetInvent & ReallyCoolData & Nikolay Dimolarov",
     author_email="contact@netinvent.fr",
-  url = 'https://github.com/netinvent/csv2vcard', 
-  keywords = ['csv', 'vcard', 'export', 'conversion', 'mass'],
-  python_requires = '>=3.6',
-  classifiers = [
-    'Development Status :: 4 - Beta','License :: OSI Approved :: MIT License',
-    "Intended Audience :: System Administrators",
-    "Intended Audience :: Information Technology",
-    "Intended Audience :: Developers",
-    'Programming Language :: Python :: 3.6',
-    "Topic :: Utilities",
+    url="https://github.com/netinvent/csv2vcard",
+    keywords=["csv", "vcard", "export", "conversion", "mass"],
+    python_requires=">=3.6",
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: MIT License",
+        "Intended Audience :: System Administrators",
+        "Intended Audience :: Information Technology",
+        "Intended Audience :: Developers",
+        "Programming Language :: Python :: 3.6",
+        "Topic :: Utilities",
     ],
-  python_requires=">=3.6",
-  scripts=scripts,
-  entry_points={
-     "console_scripts": console_scripts,
-  }
+    python_requires=">=3.6",
+    scripts=scripts,
+    entry_points={
+        "console_scripts": console_scripts,
+    },
 )

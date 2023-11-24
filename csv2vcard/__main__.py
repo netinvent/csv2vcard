@@ -24,43 +24,88 @@ def cli_interface():
         prog=__intname__,
         description="""{} {} {} 
 This program is distributed under the MIT Public License and comes with ABSOLUTELY NO WARRANTY.\n
-This is free software, and you are welcome to redistribute it under certain conditions; See Licence file for more info.""".format(__intname__, __description__, __copyright__),
+This is free software, and you are welcome to redistribute it under certain conditions; See Licence file for more info.""".format(
+            __intname__, __description__, __copyright__
+        ),
     )
 
     parser.add_argument(
-        "-s", "--source", type=str, dest="csvfile", default=None, required=True, help="Path to source CSV file"
+        "-s",
+        "--source",
+        type=str,
+        dest="csvfile",
+        default=None,
+        required=True,
+        help="Path to source CSV file",
     )
 
     parser.add_argument(
-        "-o", "--output", type=str, dest="output_dir", default=None, required=True, help="Path to destination folder"
+        "-o",
+        "--output",
+        type=str,
+        dest="output_dir",
+        default=None,
+        required=True,
+        help="Path to destination folder",
     )
 
     parser.add_argument(
-        "--vcard-version", type=int, dest="vcard_version", default=4, required=False, help="vCard version (3 or 4), defaults to 4"
+        "--vcard-version",
+        type=int,
+        dest="vcard_version",
+        default=4,
+        required=False,
+        help="vCard version (3 or 4), defaults to 4",
     )
 
     parser.add_argument(
-        "--single-vcard", action="store_true", default=False, help="Create a single VCF file with multiple entries"
+        "--single-vcard",
+        action="store_true",
+        default=False,
+        help="Create a single VCF file with multiple entries",
     )
 
     parser.add_argument(
-        "-m", "--mapping", type=str, dest="mapping_file", default=None, required=False, help="Path to optional data mapping"
+        "-m",
+        "--mapping",
+        type=str,
+        dest="mapping_file",
+        default=None,
+        required=False,
+        help="Path to optional data mapping",
     )
 
     parser.add_argument(
-        "--delimiter", type=str, dest="delimiter", default=";", required=False, help="CSV delimiter character"
+        "--delimiter",
+        type=str,
+        dest="delimiter",
+        default=";",
+        required=False,
+        help="CSV delimiter character",
     )
 
     parser.add_argument(
-        "--encoding", type=str, dest="encoding", default=None, required=False, help="Optional encoding for CSV file"
+        "--encoding",
+        type=str,
+        dest="encoding",
+        default=None,
+        required=False,
+        help="Optional encoding for CSV file",
     )
 
     args = parser.parse_args()
     version_string = f"{__intname__} {__version__}\n{__description__}\n{__copyright__}"
     print(version_string)
 
-    csv_handler.csv2vcard(csv_filename=args.csvfile, csv_delimiter=args.delimiter, mapping_file=args.mapping_file, encoding=args.encoding, output_dir=args.output_dir,
-                          vcard_version=args.vcard_version, single_vcard_file=args.single_vcard)
+    csv_handler.csv2vcard(
+        csv_filename=args.csvfile,
+        csv_delimiter=args.delimiter,
+        mapping_file=args.mapping_file,
+        encoding=args.encoding,
+        output_dir=args.output_dir,
+        vcard_version=args.vcard_version,
+        single_vcard_file=args.single_vcard,
+    )
 
 
 def main():

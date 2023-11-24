@@ -1,5 +1,6 @@
 import os
 
+
 def export_vcard(vcard: str, output_dir: str, filename: str):
     """
     Exporting a vCard to /export/

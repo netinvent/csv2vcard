@@ -47,54 +47,49 @@ import json
 
 # This is the default mapping, where each lowercase value is a column in the source CSV file
 default_mapping = {
-    'ADR': {
-        'TYPE': {
-            'HOME': 'address_home_full',
-            'WORK': ['postbox', 'address', 'city', 'region', 'zip', 'country']
+    "ADR": {
+        "TYPE": {
+            "HOME": "address_home_full",
+            "WORK": ["postbox", "address", "city", "region", "zip", "country"],
         }
     },
-    'ANNIVERSARY': 'anniversary',
-    'BDAY': 'birthday',
-    'CATEGORIES': 'categories',
-    'EMAIL': {
-        'TYPE': {
-            'HOME': 'email_home',
-            'WORK': 'email'
+    "ANNIVERSARY": "anniversary",
+    "BDAY": "birthday",
+    "CATEGORIES": "categories",
+    "EMAIL": {"TYPE": {"HOME": "email_home", "WORK": "email"}},
+    "FN": ["title", "last_name", "first_name"],
+    "GENDER": "gender",
+    "GEO": "geo",
+    "KEY": "key",
+    "LOGO": "logo",
+    "N": ["last_name", "first_name", "second_name", "title", "suffix"],
+    "NOTE": "remarks",
+    "NICKNAME": "nickname",
+    "ORG": "company",
+    "PHOTO": "photo",
+    "ROLE": "role",
+    "TEL": {
+        "TYPE": {
+            "HOME,CELL": "mobile_phone_home",
+            "HOME,FAX": "fax_home",
+            "HOME,PAGER": "pager_home",
+            "HOME,VOICE": "phone_home",
+            "HOME,VIDEO": "video_phone_home",
+            "HOME,TEXTPHONE": "text_phone_home",
+            "HOME,TEXT": "text_home",
+            "WORK,CELL": "mobile_phone",
+            "WORK,FAX": "fax",
+            "WORK,PAGER": "pager",
+            "WORK,VOICE": "phone",
+            "WORK,VIDEO": "video_phone",
+            "WORK,TEXTPHONE": "text_phone",
+            "WORK,TEXT": "text",
         }
     },
-    'FN': ['title', 'last_name', 'first_name'],
-    'GENDER': 'gender',
-    'GEO': 'geo',
-    'KEY': 'key',
-    'LOGO': 'logo',
-    'N': ['last_name', 'first_name', 'second_name', 'title', 'suffix'],
-    'NOTE': 'remarks',
-    'NICKNAME': 'nickname',
-    'ORG': 'company',
-    'PHOTO': 'photo',
-    'ROLE': 'role',
-    'TEL': {
-        'TYPE': {
-            'HOME,CELL': 'mobile_phone_home',
-            'HOME,FAX': 'fax_home',
-            'HOME,PAGER': 'pager_home',
-            'HOME,VOICE': 'phone_home',
-            'HOME,VIDEO': 'video_phone_home',
-            'HOME,TEXTPHONE': 'text_phone_home',
-            'HOME,TEXT': 'text_home',
-            'WORK,CELL': 'mobile_phone',
-            'WORK,FAX': 'fax',
-            'WORK,PAGER': 'pager',
-            'WORK,VOICE': 'phone',
-            'WORK,VIDEO': 'video_phone',
-            'WORK,TEXTPHONE': 'text_phone',
-            'WORK,TEXT': 'text'
-        }
-    },
-    'TITLE': 'title',
-    'TZ': 'timezone',
-    'UID': 'uuid',
-    'URL': 'webpage',
+    "TITLE": "title",
+    "TZ": "timezone",
+    "UID": "uuid",
+    "URL": "webpage",
 }
 
 
@@ -107,7 +102,9 @@ def load_mapping_file(mapping_file: str):
         return json.load(fp)
 
 
-def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> Tuple[str, str]:
+def create_vcard(
+    contact: dict, version: int = 4, mapping_file: dict = None
+) -> Tuple[str, str]:
     """
     The mappings used below are from https://www.w3.org/TR/vcard-rdf/#Mapping
     """
@@ -121,23 +118,22 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
 
     vcard_map = {}
     for key, value in mapping.items():
-
         # Don't bother when no mapping is available
         if not value:
             continue
 
         # Handle all keys with TYPE
         try:
-            mapping[key]['TYPE']
+            mapping[key]["TYPE"]
         except TypeError:
             pass
         else:
-            for type_key, type_value in mapping[key]['TYPE'].items():
+            for type_key, type_value in mapping[key]["TYPE"].items():
                 id = f"{key}-{type_key}-{type_value}"
-                if isinstance(mapping[key]['TYPE'][type_key], list):
+                if isinstance(mapping[key]["TYPE"][type_key], list):
                     vcard_map[id] = f"{key},TYPE={type_key}:"
-                    mapping_len = len(mapping[key]['TYPE'][type_key])
-                    for num, sub_key in enumerate(mapping[key]['TYPE'][type_key]):
+                    mapping_len = len(mapping[key]["TYPE"][type_key])
+                    for num, sub_key in enumerate(mapping[key]["TYPE"][type_key]):
                         try:
                             if sub_key:
                                 if num == mapping_len - 1:
@@ -148,14 +144,19 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
                             if num < mapping_len - 1:
                                 vcard_map[id] += ";"
                             print(f"1010: CSV file has no key {sub_key}")
-                        
+
                 else:
                     try:
-                        if mapping[key]['TYPE'][type_key] and contact[mapping[key]['TYPE'][type_key]]:
-                            vcard_map[id] = f"{key},TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
+                        if (
+                            mapping[key]["TYPE"][type_key]
+                            and contact[mapping[key]["TYPE"][type_key]]
+                        ):
+                            vcard_map[
+                                id
+                            ] = f"{key},TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
                     except TypeError:
                         print(f"1001: CSV file has no key {type_value}")
-                    
+
             continue
 
         # Handle all list types
@@ -163,7 +164,7 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
             vcard_map[key] = f"{key}:"
             for num, sub_key in enumerate(mapping[key]):
                 try:
-                    if num == mapping_len -1:
+                    if num == mapping_len - 1:
                         vcard_map[key] += f"{contact[sub_key]}"
                     else:
                         vcard_map[key] += f"{contact[sub_key]};"
@@ -174,19 +175,19 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
             continue
 
         # Handle special cases for KEY, LOGO and PHOTO
-        if key in ['KEY', 'LOGO', 'PHOTO']:
+        if key in ["KEY", "LOGO", "PHOTO"]:
             try:
                 contact_value = contact[value].strip()
             except KeyError:
                 print(f"1003: CSV file has no key {value}")
                 continue
 
-            if key == 'KEY':
-                data_type = {3: 'PGP', 4: 'application/pgp-keys'}
-            if key == 'LOGO':
-                data_type = {3: 'PNG', 4: 'application/png'}
-            if key == 'PHOTO':
-                data_type = {3: 'JPEG', 4: 'image/jpeg'}
+            if key == "KEY":
+                data_type = {3: "PGP", 4: "application/pgp-keys"}
+            if key == "LOGO":
+                data_type = {3: "PNG", 4: "application/png"}
+            if key == "PHOTO":
+                data_type = {3: "JPEG", 4: "image/jpeg"}
 
             if contact_value.lower().startswith("http"):
                 if version == 3:
@@ -197,13 +198,19 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
                 try:
                     base64.b64decode(contact[value])
                 except (TypeError, binascii_Error):
-                    print(f"1005: Contact key {key} has bogus data (no URI nor B64 encoded data)")
+                    print(
+                        f"1005: Contact key {key} has bogus data (no URI nor B64 encoded data)"
+                    )
                     continue
 
                 if version == 3:
-                    vcard_map[key] = f"{key};TYPE={data_type[3]};ENCODING=b:{contact[value]}"
+                    vcard_map[
+                        key
+                    ] = f"{key};TYPE={data_type[3]};ENCODING=b:{contact[value]}"
                 if version == 4:
-                    vcard_map[key] = f"{key};data:{data_type[4]};base64,{contact[value]}"
+                    vcard_map[
+                        key
+                    ] = f"{key};data:{data_type[4]};base64,{contact[value]}"
             continue
 
         # Handle all other scenarios
@@ -215,13 +222,13 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
 
         # Now check that we don't get garbage data
         if key == "GENDER":
-            if data.upper() not in ['', 'M', 'F', 'O', 'N', 'U']:
+            if data.upper() not in ["", "M", "F", "O", "N", "U"]:
                 print(f"1006: Key {key} has invalid gender {data}")
             elif data:
                 vcard_map[key] = f"{key}:{data.upper()}"
             continue
         elif key == "GEO":
-            if not ';' in data:
+            if not ";" in data:
                 print(f"1007: Key {key} has invalid geo data {data}")
             elif data:
                 vcard_map[key] = f"{key}:{data}"
@@ -230,21 +237,21 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
 
     # Actually add revision to our vcard if not exist
     try:
-        vcard_map['REV']
+        vcard_map["REV"]
     except:
-        vcard_map['REV'] = "REV:" + datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+        vcard_map["REV"] = "REV:" + datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
 
     vcard_str_content = ""
     for entry in vcard_map:
-        vcard_str_content += vcard_map[entry] + '\n'
+        vcard_str_content += vcard_map[entry] + "\n"
 
     # Foolproof check
-    if vcard_map['FN'] == "FN:;;;" or vcard_map["N"] == "N:;;;;;":
+    if vcard_map["FN"] == "FN:;;;" or vcard_map["N"] == "N:;;;;;":
         print(f"1008: Cannot create vcard for contact {contact}")
         return None, None
-    
+
     vcard = f"BEGIN:VCARD\nVERSION:{version}.0\n" + vcard_str_content + "END:VCARD\n"
 
-    vc_filename = vcard_map['FN']
+    vc_filename = vcard_map["FN"]
 
     return vcard, vc_filename
