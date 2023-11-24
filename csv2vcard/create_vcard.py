@@ -140,16 +140,16 @@ def create_vcard(
                     vcard_map[idkey] = f"{key},TYPE={type_key}:"
                     mapping_len = len(mapping[key]["TYPE"][type_key])
                     for num, sub_key in enumerate(mapping[key]["TYPE"][type_key]):
-                        try:
-                            if sub_key:
+                        if sub_key:
+                            try: 
                                 if num == mapping_len - 1:
                                     vcard_map[idkey] += f"{contact[sub_key]}"
                                 else:
                                     vcard_map[idkey] += f"{contact[sub_key]};"
-                        except KeyError:
-                            if num < mapping_len - 1:
-                                vcard_map[idkey] += ";"
-                            print(f"1010: CSV file has no key {sub_key}")
+                            except KeyError:
+                                if num < mapping_len - 1:
+                                    vcard_map[idkey] += ";"
+                                print(f"1010: CSV file has no key {sub_key}")
 
                 else:
                     try:
@@ -169,15 +169,16 @@ def create_vcard(
         if isinstance(mapping[key], list):
             vcard_map[key] = f"{key}:"
             for num, sub_key in enumerate(mapping[key]):
-                try:
-                    if num == mapping_len - 1:
-                        vcard_map[key] += f"{contact[sub_key]}"
-                    else:
-                        vcard_map[key] += f"{contact[sub_key]};"
-                except KeyError:
-                    if num < mapping_len - 1:
-                        vcard_map[key] += ";"
-                    print(f"1002: CSV file has no key {sub_key}")
+                if sub_key:
+                    try:
+                        if num == mapping_len - 1:
+                            vcard_map[key] += f"{contact[sub_key]}"
+                        else:
+                            vcard_map[key] += f"{contact[sub_key]};"
+                    except KeyError:
+                        if num < mapping_len - 1:
+                            vcard_map[key] += ";"
+                        print(f"1002: CSV file has no key {sub_key}")
             continue
 
         # Handle special cases for KEY, LOGO and PHOTO
