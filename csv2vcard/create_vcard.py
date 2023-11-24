@@ -136,16 +136,22 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
                 id = f"{key}-{type_key}-{type_value}"
                 if isinstance(mapping[key]['TYPE'][type_key], list):
                     vcard_map[id] = f"{key},TYPE={type_key}:"
-                    for sub_key in mapping[key]['TYPE'][type_key]:
+                    mapping_len = len(mapping[key]['TYPE'][type_key])
+                    for num, sub_key in enumerate(mapping[key]['TYPE'][type_key]):
                         try:
                             if sub_key:
-                                vcard_map[id] += f"{contact[sub_key]};"
+                                if num == mapping_len - 1:
+                                    vcard_map[id] += f"{contact[sub_key]}"
+                                else:
+                                    vcard_map[id] += f"{contact[sub_key]};"
                         except KeyError:
+                            if num < mapping_len - 1:
+                                vcard_map[id] += ";"
                             print(f"1010: CSV file has no key {sub_key}")
                         
                 else:
                     try:
-                        if mapping[key]['TYPE'][type_key]:
+                        if mapping[key]['TYPE'][type_key] and contact[mapping[key]['TYPE'][type_key]]:
                             vcard_map[id] = f"{key},TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
                     except TypeError:
                         print(f"1001: CSV file has no key {type_value}")
@@ -155,11 +161,15 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
         # Handle all list types
         if isinstance(mapping[key], list):
             vcard_map[key] = f"{key}:"
-            for sub_key in mapping[key]:
+            for num, sub_key in enumerate(mapping[key]):
                 try:
-                    vcard_map[key] += f"{contact[sub_key]};"
+                    if num == mapping_len -1:
+                        vcard_map[key] += f"{contact[sub_key]}"
+                    else:
+                        vcard_map[key] += f"{contact[sub_key]};"
                 except KeyError:
-                    vcard_map[key] += ";"
+                    if num < mapping_len - 1:
+                        vcard_map[key] += ";"
                     print(f"1002: CSV file has no key {sub_key}")
             continue
 
@@ -207,15 +217,15 @@ def create_vcard(contact: dict, version: int = 4, mapping_file: dict = None) -> 
         if key == "GENDER":
             if data.upper() not in ['', 'M', 'F', 'O', 'N', 'U']:
                 print(f"1006: Key {key} has invalid gender {data}")
-            else:
+            elif data:
                 vcard_map[key] = f"{key}:{data.upper()}"
             continue
         elif key == "GEO":
             if not ';' in data:
                 print(f"1007: Key {key} has invalid geo data {data}")
-            else:
+            elif data:
                 vcard_map[key] = f"{key}:{data}"
-        else:
+        elif data:
             vcard_map[key] = f"{key}:{data}"
 
     # Actually add revision to our vcard if not exist
