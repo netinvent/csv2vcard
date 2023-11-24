@@ -5,6 +5,8 @@
 
 
 import os
+import sys
+import pathlib
 import csv
 from csv2vcard.export_vcard import check_export_dir, export_vcard
 from csv2vcard.create_vcard import create_vcard
@@ -98,3 +100,20 @@ def csv2vcard(
             os.path.basename(csv_filename) + f"{file_num}.vcf",
             strip_accents,
         )
+
+
+def interface_entrypoint(config: dict):
+    settings = config["settings"]
+    source = pathlib.Path(settings["csv_filename"])
+    sources = []
+    if not os.path.exists(source):
+        sys.exit(202)
+    elif os.path.isdir(source):
+        sources = source.glob("**/*.csv")
+    else:
+        sources = [source]
+
+    for src in sources:
+        settings["csv_filename"] = src
+        print(f"Running conversion for {src}")
+        csv2vcard(**settings)

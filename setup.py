@@ -79,6 +79,7 @@ for path in ["__main__.py", PACKAGE_NAME + ".py"]:
         break
 metadata = get_metadata(package_file)
 requirements = parse_requirements(os.path.join(package_path, "requirements.txt"))
+gui_requirements = parse_requirements(os.path.join(package_path, "requirements-gui.txt"))
 long_description = _read_file("README.md")
 
 if os.name == "nt":
@@ -93,6 +94,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     version=metadata["version"],
     install_requires=requirements,
+    extra_requirements={
+        "gui": gui_requirements
+    }
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type="text/markdown",
