@@ -13,9 +13,12 @@ As of 0.5.0, csv2vcard has the following new capabilities:
 - Autodetects file encoding
 - Can use custom CSV mapping files
 - Can generate a single vCard file containing all contacts from a CSV file
+  - Can split single vCard file into smaller chunks for webmails that don't like them (eg Grommunio 2023.11 does not accept more than about 80kb per file)
 - Can be launched directly from shell via `csv2vcard` if python executable is in path environment
 - Supports Logo, Photo and PGP keys as links or inline base64
 - Supports multiple CSV files when directory given
+- Optionally remove accents from vCards
+- Basic data validation
 
 ## Usage
 
@@ -52,9 +55,11 @@ There's no need for those columns to be in a specific order for the script to wo
 | --h|--help                                         | Shows help                                                 |
 | --delimiter <any single character like `;`, `,`>   | Changes default delimiter `;`                              |
 | --single-vcard                                     | Creates a single vCard file containing all the contacts    |
+| --max-vcard-file-size <integer>                    | Limits single vcard files to max (kb) size                 |
 | --vcard-version <3|4>                              | Chooses which vCard version to generate (defaults to 4)    |
 | --encoding <python known encoding string>          | Replaces automagically detected file encoding              |
 | -m|--mapping <path_to_json_mapping_file>           | Replaces default mapping with custom one (see below)       |
+| --strip-acccents                                   | Removes any accents from vCard, for max compatibility      |
 |-----------------------------------------------------------------------------------------------------------------|
 
 ## Custom mappings
@@ -62,7 +67,17 @@ There's no need for those columns to be in a specific order for the script to wo
 By default, the above CSV columns are mapped to vCards.
 
 Since vCard has nested values, the mapping file needs to be nested too.  
-Some values like FormattedName (`FN`) or DisplayName (`N`) are concatenations of Title, LastName, FirstName, SecondName, Suffix colunms and need to be mapped as lists of data columns to map to a single property. The order of the lists follow the syntax of vCard standards.
+Some values like FormattedName (`FN`) can be string concatenations of Title, FirstName, LastName. These must use the form:
+```
+    "FN": {"CONCAT": ["Title", "FirstName", "LastName]}
+```
+
+Other properties must concatenate columns with a separator, as Name (`N`) property. They must use the following syntax:
+```
+    "N": ["last_name", "first_name", "second_name", "title", "suffix"],
+```
+The order of the above list follows the syntax of vCard standards.
+
 
 The default mapping included in csv2vcard looks like the following:
 
@@ -84,7 +99,9 @@ The default mapping included in csv2vcard looks like the following:
                 "WORK": "email"
             }
         },
-    "FN": ["title", "last_name", "first_name"],
+    "FN": {
+        "CONCAT": ["title", "last_name", "first_name"],
+    },
     "GENDER": "gender",
     "GEO": "geo",
     "KEY": "key",
@@ -128,3 +145,27 @@ Another example of Orange Business webmail CSV exports can be found in the mappi
 
 Photo, Logo and (PGP)Key properties can be set to link to an URI (needs to begin with http(s)), or could be set to incorporate directly base64 encoded data. In that case, your CSV file will be very long, but csv2vcard will handle this scenario too.
 If you can, just put those columns at the end of the file for better readability.
+
+## Data validation
+
+Empty columns won't trigger any errors unless there's no FN or N properties that can be generated.  
+Simple checks are performed on:
+- KEY, LOGO and PHOTO properties (check if begins with http(s) or if value is base64 encoded)
+- GENDER which required to be a single character according to vCard standard
+- GEO which requires to be two floats separated by a semi-column
+- EMAIL which requires an arobase sign (TODO: update to RFC822 validation)
+
+
+## Examples
+
+On Windows
+Convert an Orange webmail CSV export to vCards compatible with Grommunio web import (max 80kb size without accents)
+
+```
+csv2vcard.cmd -s "c:\contacts" -o "c:\contacts\vcards" --single-vcard -m mappings\orange_webmail.json --delimiter , --max-vcard-size 80 --strip-accents
+```
+
+On Linux
+```
+csv2vcard -s /contacts -o /contacts/vcards --single-vcard -m /opt/mappigs/orange_webmail.json --delimiter , --max-vcard-size 80 --strip-accents
+```
