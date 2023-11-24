@@ -14,7 +14,9 @@
             "WORK": "Adresse de messagerie 2"
         }
     },
-    "FN": ["Titre", "Nom", "Prénom"],
+    "FN": {
+        "CONCAT": ["Titre", "Nom"]
+    },
     "GENDER": "Sexe",
     "GEO": null,
     "KEY": null,
