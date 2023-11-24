@@ -257,7 +257,6 @@ def create_vcard(
         return None, None
 
     vcard = f"BEGIN:VCARD\nVERSION:{version}.0\n" + vcard_str_content + "END:VCARD\n"
-    vc_filename = "-".join(filter(None, vcard_map["N"].split(";")))[2:] + '.vcf'
-
+    vc_filename = "-".join(filter(None, vcard_map["N"].split(";")))[2:] + ".vcf"
 
     return vcard, vc_filename

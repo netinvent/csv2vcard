@@ -24,8 +24,7 @@ def cli_interface():
         prog=__intname__,
         description=f"""{__intname__} {__version__} {__description__} {__copyright__}
 This program is distributed under the MIT Public License and comes with ABSOLUTELY NO WARRANTY.\n
-This is free software, and you are welcome to redistribute it under certain conditions; See Licence file for more info.""".format(
-        ),
+This is free software, and you are welcome to redistribute it under certain conditions; See Licence file for more info.""".format(),
     )
 
     parser.add_argument(

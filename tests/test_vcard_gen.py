@@ -53,6 +53,7 @@ def test_csv2vcard(version: int = 4):
     print(vcard)
     export_vcard(vcard, output_dir, filename)
 
+
 if __name__ == "__main__":
     print("Example code for %s, %s" % (__intname__, __build__))
     test_csv2vcard()
