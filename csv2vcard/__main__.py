@@ -102,6 +102,12 @@ This is free software, and you are welcome to redistribute it under certain cond
         help="Optional size limit for single vCard files",
     )
 
+    parser.add_argument(
+        "--strip-accents",
+        action="store_true",
+        default=False,
+        help="Optional strip accents from vCards for max compatibility",
+    )
 
     args = parser.parse_args()
     version_string = f"{__intname__} {__version__}\n{__description__}\n{__copyright__}"
@@ -125,7 +131,8 @@ This is free software, and you are welcome to redistribute it under certain cond
             output_dir=args.output_dir,
             vcard_version=args.vcard_version,
             single_vcard_file=args.single_vcard,
-            max_vcard_file_size=args.max_vcard_file_size
+            max_vcard_file_size=args.max_vcard_file_size,
+            strip_accents=args.strip_accents
         )
 
 
