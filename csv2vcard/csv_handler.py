@@ -1,7 +1,14 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+#
+# This file is part of csv2vcard
+
+
 import os
+import csv
 from csv2vcard.export_vcard import check_export_dir, export_vcard
 from csv2vcard.create_vcard import create_vcard
-import csv
+
 
 try:
     from charset_normalizer import detect

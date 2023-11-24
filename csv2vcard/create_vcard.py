@@ -1,3 +1,9 @@
+#! /usr/bin/env python
+#  -*- coding: utf-8 -*-
+#
+# This file is part of csv2vcard
+
+
 from typing import Tuple
 import base64
 from binascii import Error as binascii_Error
@@ -129,20 +135,20 @@ def create_vcard(
             pass
         else:
             for type_key, type_value in mapping[key]["TYPE"].items():
-                id = f"{key}-{type_key}-{type_value}"
+                idkey = f"{key}-{type_key}-{type_value}"
                 if isinstance(mapping[key]["TYPE"][type_key], list):
-                    vcard_map[id] = f"{key},TYPE={type_key}:"
+                    vcard_map[idkey] = f"{key},TYPE={type_key}:"
                     mapping_len = len(mapping[key]["TYPE"][type_key])
                     for num, sub_key in enumerate(mapping[key]["TYPE"][type_key]):
                         try:
                             if sub_key:
                                 if num == mapping_len - 1:
-                                    vcard_map[id] += f"{contact[sub_key]}"
+                                    vcard_map[idkey] += f"{contact[sub_key]}"
                                 else:
-                                    vcard_map[id] += f"{contact[sub_key]};"
+                                    vcard_map[idkey] += f"{contact[sub_key]};"
                         except KeyError:
                             if num < mapping_len - 1:
-                                vcard_map[id] += ";"
+                                vcard_map[idkey] += ";"
                             print(f"1010: CSV file has no key {sub_key}")
 
                 else:
@@ -238,7 +244,7 @@ def create_vcard(
     # Actually add revision to our vcard if not exist
     try:
         vcard_map["REV"]
-    except:
+    except KeyError:
         vcard_map["REV"] = "REV:" + datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
 
     vcard_str_content = ""

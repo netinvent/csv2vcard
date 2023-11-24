@@ -22,10 +22,9 @@ from csv2vcard import csv_handler
 def cli_interface():
     parser = ArgumentParser(
         prog=__intname__,
-        description="""{} {} {} 
+        description=f"""{__intname__} {__version__} {__description__} {__copyright__}
 This program is distributed under the MIT Public License and comes with ABSOLUTELY NO WARRANTY.\n
 This is free software, and you are welcome to redistribute it under certain conditions; See Licence file for more info.""".format(
-            __intname__, __description__, __copyright__
         ),
     )
 
@@ -112,11 +111,11 @@ def main():
     try:
         cli_interface()
     except KeyboardInterrupt as exc:
-        print("Program interrupted by keyboard. {}".format(exc))
+        print(f"Program interrupted by keyboard. {exc}")
         # EXIT_CODE 200 = keyboard interrupt
         sys.exit(200)
     except Exception as exc:
-        print("Program interrupted by error. {}".format(exc))
+        print(f"Program interrupted by error. {exc}")
         traceback.print_exc()
         # EXIT_CODE 201 = Non handled exception
         sys.exit(201)
