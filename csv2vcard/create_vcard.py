@@ -160,7 +160,7 @@ def create_vcard(
                             vcard_map[
                                 id
                             ] = f"{key},TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
-                    except TypeError:
+                    except (KeyError, TypeError):
                         print(f"1001: CSV file has no key {type_value}")
 
             continue
@@ -257,7 +257,7 @@ def create_vcard(
         return None, None
 
     vcard = f"BEGIN:VCARD\nVERSION:{version}.0\n" + vcard_str_content + "END:VCARD\n"
+    vc_filename = "-".join(filter(None, vcard_map["N"].split(";")))[2:] + '.vcf'
 
-    vc_filename = vcard_map["FN"]
 
     return vcard, vc_filename
