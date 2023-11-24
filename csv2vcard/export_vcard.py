@@ -16,7 +16,7 @@ def export_vcard(vcard: str, output_dir: str, filename: str):
         with open(filepath, "w", encoding="utf-8") as fp:
             fp.write(vcard)
             fp.close()
-            print(f"Created vCard for {filename}.")
+            print(f"Created vCard for {filename}")
     except OSError as exc:
         print(f"Could not write file {filepath}: {exc}")
 
