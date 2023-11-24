@@ -55,7 +55,14 @@ import json
 default_mapping = {
     "ADR": {
         "TYPE": {
-            "HOME": ["postbox_home", "address_home", "city_home", "region_home", "zip_home", "country_home"],
+            "HOME": [
+                "postbox_home",
+                "address_home",
+                "city_home",
+                "region_home",
+                "zip_home",
+                "country_home",
+            ],
             "WORK": ["postbox", "address", "city", "region", "zip", "country"],
         }
     },
@@ -143,7 +150,7 @@ def create_vcard(
                     mapping_len = len(mapping[key]["TYPE"][type_key])
                     for num, sub_key in enumerate(mapping[key]["TYPE"][type_key]):
                         if sub_key:
-                            try: 
+                            try:
                                 if num == mapping_len - 1:
                                     vcard_map[idkey] += f"{contact[sub_key]}"
                                 else:
@@ -160,7 +167,10 @@ def create_vcard(
                             mapping[key]["TYPE"][type_key]
                             and contact[mapping[key]["TYPE"][type_key]]
                         ):
-                            if key == "EMAIL" and not '@' in contact[mapping[key]["TYPE"][type_key]]:
+                            if (
+                                key == "EMAIL"
+                                and not "@" in contact[mapping[key]["TYPE"][type_key]]
+                            ):
                                 print(f"1014: No valid email addres in {contact}")
                                 continue
                             vcard_map[
@@ -196,7 +206,9 @@ def create_vcard(
                     vcard_map[key] = f"{key}:{fn_entry.strip()}"
                 continue
             else:
-                print(f"1013: Key {key} with CONCAT does not contain a list of columns to concatenate")
+                print(
+                    f"1013: Key {key} with CONCAT does not contain a list of columns to concatenate"
+                )
                 continue
 
         # Handle all list types

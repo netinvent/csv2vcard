@@ -60,7 +60,7 @@ def csv2vcard(
     vcard_version: int = 4,
     single_vcard_file: bool = False,
     max_vcard_file_size: int = None,
-    strip_accents: bool = False
+    strip_accents: bool = False,
 ) -> None:
     """
     Main function
@@ -83,8 +83,18 @@ def csv2vcard(
                 vcards += "\n" + vcard
                 if len(vcards) > max_vcard_file_size:
                     print(f"Creating sub file for {csv_filename}")
-                    export_vcard(vcards, output_dir, os.path.basename(csv_filename) + f"{file_num}.vcf", strip_accents)
+                    export_vcard(
+                        vcards,
+                        output_dir,
+                        os.path.basename(csv_filename) + f"{file_num}.vcf",
+                        strip_accents,
+                    )
                     file_num = str(int(file_num) + 1)
                     vcards = ""
     if single_vcard_file:
-        export_vcard(vcards, output_dir, os.path.basename(csv_filename) + f"{file_num}.vcf", strip_accents)
+        export_vcard(
+            vcards,
+            output_dir,
+            os.path.basename(csv_filename) + f"{file_num}.vcf",
+            strip_accents,
+        )

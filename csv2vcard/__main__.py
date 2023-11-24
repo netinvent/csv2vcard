@@ -132,7 +132,7 @@ This is free software, and you are welcome to redistribute it under certain cond
             vcard_version=args.vcard_version,
             single_vcard_file=args.single_vcard,
             max_vcard_file_size=args.max_vcard_file_size,
-            strip_accents=args.strip_accents
+            strip_accents=args.strip_accents,
         )
 
 

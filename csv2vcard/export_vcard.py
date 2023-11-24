@@ -13,7 +13,11 @@ def strip_accents(string):
     From https://stackoverflow.com/a/518232/2635443
     """
 
-    return ''.join(c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn')
+    return "".join(
+        c
+        for c in unicodedata.normalize("NFD", string)
+        if unicodedata.category(c) != "Mn"
+    )
 
 
 def export_vcard(vcard: str, output_dir: str, filename: str, normalize: bool = False):
