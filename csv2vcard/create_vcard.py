@@ -55,7 +55,7 @@ import json
 default_mapping = {
     "ADR": {
         "TYPE": {
-            "HOME": "address_home_full",
+            "HOME": ["postbox_home", "address_home", "city_home", "region_home", "zip_home", "country_home"],
             "WORK": ["postbox", "address", "city", "region", "zip", "country"],
         }
     },
