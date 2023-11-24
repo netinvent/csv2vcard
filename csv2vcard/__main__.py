@@ -8,9 +8,9 @@ __author__ = "Nikolay Dimolarov (https://github.com/tech4242), Carlos V (https:/
 __site__ = "github.com/netinvent/csv2vcard"
 __description__ = "Transform CSV files into vCards"
 __copyright__ = "Copyright (C) 2017-2023 Nikolay Dimolarov, Carlos V, Orsiris de Jong"
-__license__ = "MIT"
-__build__ = "2023112301"
-__version__ = "0.5.0"
+__license__ = "MIT License"
+__build__ = "2023112401"
+__version__ = "0.5.1"
 
 
 import sys
