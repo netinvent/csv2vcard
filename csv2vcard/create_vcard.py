@@ -63,7 +63,9 @@ default_mapping = {
     "BDAY": "birthday",
     "CATEGORIES": "categories",
     "EMAIL": {"TYPE": {"HOME": "email_home", "WORK": "email"}},
-    "FN": ["title", "last_name", "first_name"],
+    "FN": {
+        "CONCAT": ["title", "last_name", "first_name"],
+    },
     "GENDER": "gender",
     "GEO": "geo",
     "KEY": "key",
@@ -131,13 +133,13 @@ def create_vcard(
         # Handle all keys with TYPE
         try:
             mapping[key]["TYPE"]
-        except TypeError:
+        except (KeyError, TypeError):
             pass
         else:
             for type_key, type_value in mapping[key]["TYPE"].items():
                 idkey = f"{key}-{type_key}-{type_value}"
                 if isinstance(mapping[key]["TYPE"][type_key], list):
-                    vcard_map[idkey] = f"{key},TYPE={type_key}:"
+                    vcard_map[idkey] = f"{key};TYPE={type_key}:"
                     mapping_len = len(mapping[key]["TYPE"][type_key])
                     for num, sub_key in enumerate(mapping[key]["TYPE"][type_key]):
                         if sub_key:
@@ -152,18 +154,51 @@ def create_vcard(
                                 print(f"1010: CSV file has no key {sub_key}")
 
                 else:
+                    # Emails are handled here
                     try:
                         if (
                             mapping[key]["TYPE"][type_key]
                             and contact[mapping[key]["TYPE"][type_key]]
                         ):
+                            if key == "EMAIL" and not '@' in contact[mapping[key]["TYPE"][type_key]]:
+                                print(f"1014: No valid email addres in {contact}")
+                                continue
                             vcard_map[
                                 id
-                            ] = f"{key},TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
+                            ] = f"{key};TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
                     except (KeyError, TypeError):
                         print(f"1001: CSV file has no key {type_value}")
 
             continue
+
+        # Handle special concatenation case for FN where multiple colunms will be concatenated to a string
+        # Also removes unecessary separator characters
+        try:
+            mapping[key]["CONCAT"]
+        except TypeError:
+            pass
+        else:
+            if isinstance(mapping[key]["CONCAT"], list):
+                fn_entry = ""
+                for sub_key in mapping[key]["CONCAT"]:
+                    if sub_key:
+                        try:
+                            data = contact[sub_key]
+                            for char in [",", ";", ":"]:
+                                # TODO: We could check if left or right has a space, and depending on it, replace with ' ' or ''
+                                data = data.replace(char, "")
+                            fn_entry += data.strip()
+                        except KeyError:
+                            print(f"1011: CSV file has no key {sub_key}")
+                print(fn_entry)
+                if not fn_entry.strip():
+                    print(f"1012: No Valid FN entry for {contact}")
+                else:
+                    vcard_map[key] = f"{key}:{fn_entry.strip()}"
+                continue
+            else:
+                print(f"1013: Key {key} with CONCAT does not contain a list of columns to concatenate")
+                continue
 
         # Handle all list types
         if isinstance(mapping[key], list):
@@ -223,7 +258,7 @@ def create_vcard(
         # Handle all other scenarios
         try:
             data = contact[value]
-        except KeyError:
+        except (KeyError, TypeError):
             print(f"1004: CSV file has no key {value}")
             continue
 
@@ -253,7 +288,7 @@ def create_vcard(
         vcard_str_content += vcard_map[entry] + "\n"
 
     # Foolproof check
-    if vcard_map["FN"] == "FN:;;;" or vcard_map["N"] == "N:;;;;;":
+    if vcard_map["FN"] == "FN:" or vcard_map["N"] == "N:;;;;;":
         print(f"1008: Cannot create vcard for contact {contact}")
         return None, None
 
