@@ -78,7 +78,7 @@ def gui_interface():
             sg.Text("CSV File/Folder", size=(26, 1)),
             sg.In(size=(25, 1), key="-csv_filename-"),
             sg.FileBrowse("Select file", target="-csv_filename-"),
-            sg.FolderBrowse("Select folder", target="-source-"),
+            sg.FolderBrowse("Select folder", target="-csv_filename-"),
         ],
         [
             sg.Text("CSV Delimiter char", size=(26, 1)),
@@ -165,7 +165,7 @@ def gui_interface():
                 sg.PopupError(f"Could not import config file {config_filename}: {exc}")
         if event == "-CONVERT-":
             config = get_config_from_gui(values)
-            interface_entrypoint(config)
+            _interface_entrypoint(config)
 
 
 @threaded
@@ -183,7 +183,9 @@ def _interface_entrypoint(config: dict) -> bool:
     thread = __interface_entrypoint(config)
     while not thread.done() and not thread.cancelled():
         sg.PopupAnimated(
-            LOADER_ANIMATION, message="Running conversions", time_between_frames=50
+            LOADER_ANIMATION, message="Running conversions", time_between_frames=50,
+                        background_color=GUI_LOADER_COLOR,
+            text_color=GUI_LOADER_TEXT_COLOR,
         )
     sg.PopupAnimated(None)
     return thread.result()
