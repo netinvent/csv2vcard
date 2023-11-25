@@ -4,6 +4,13 @@
 # This file is part of csv2vcard
 
 
+# Windows executable file info
+COMPANY_NAME = "NetInvent"
+COPYRIGHT = "NetInvent 2023"
+FILE_DESCRIPTION = "csv2vcard"
+TRADEMARKS = "NetInvent (C)"
+PRODUCT_NAME = "csv2vcard open source converter"
+
 PYSIMPLEGUI_THEME = "Reddit"
 GUI_LOADER_COLOR = "#0079d3"
 GUI_LOADER_TEXT_COLOR = "#FFFFFF"
