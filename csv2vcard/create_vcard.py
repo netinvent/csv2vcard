@@ -191,7 +191,7 @@ def create_vcard(
         # Also removes unecessary separator characters
         try:
             mapping[key]["CONCAT"]
-        except TypeError:
+        except (KeyError, TypeError):
             pass
         else:
             if isinstance(mapping[key]["CONCAT"], list):
