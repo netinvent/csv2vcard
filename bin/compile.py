@@ -39,14 +39,13 @@ from csv2vcard.customization import (
     PRODUCT_NAME,
     FILE_DESCRIPTION,
     COPYRIGHT,
-    #LICENSE_FILE,
+    # LICENSE_FILE,
 )
 from csv2vcard.path_helper import BASEDIR
 import glob
 
 
 del sys.path[0]
-
 
 
 def _read_file(filename):
@@ -84,7 +83,7 @@ def have_nuitka_commercial():
 
 def compile(arch: str, target: str, has_gui: bool = False):
     if os.name == "nt":
-        program_executable = target + '.exe'
+        program_executable = target + ".exe"
         platform = "windows"
     elif sys.platform.lower() == "darwin":
         platform = "darwin"
@@ -109,11 +108,11 @@ def compile(arch: str, target: str, has_gui: bool = False):
 
     file_description = f"{FILE_DESCRIPTION} P{sys.version_info[1]}"
 
-    #translations_dir = "translations"
-    #translations_dir_source = os.path.join(BASEDIR, translations_dir)
-    #translations_dir_dest = os.path.join(PACKAGE_DIR, translations_dir)
+    # translations_dir = "translations"
+    # translations_dir_source = os.path.join(BASEDIR, translations_dir)
+    # translations_dir_dest = os.path.join(PACKAGE_DIR, translations_dir)
 
-    #license_dest_file = os.path.join(PACKAGE_DIR, os.path.basename(LICENSE_FILE))
+    # license_dest_file = os.path.join(PACKAGE_DIR, os.path.basename(LICENSE_FILE))
 
     icon_file = os.path.join(PACKAGE_DIR, "netperfect.ico")
 
@@ -133,9 +132,8 @@ def compile(arch: str, target: str, has_gui: bool = False):
         NUITKA_OPTIONS += f" --nofollow-import-to={PACKAGE_NAME}.windows"
 
     EXE_OPTIONS = f'--company-name="{COMPANY_NAME}" --product-name="{PRODUCT_NAME}" --file-version="{FILE_VERSION}" --product-version="{PRODUCT_VERSION}" --copyright="{COPYRIGHT}" --file-description="{file_description}" --trademarks="{TRADEMARKS}"'
-    #CMD = f'{PYTHON_EXECUTABLE} -m nuitka --python-flag=no_docstrings --python-flag=-O {NUITKA_OPTIONS} {EXE_OPTIONS} --onefile --include-data-dir="{translations_dir_source}"="{translations_dir_dest}" --include-data-file="{LICENSE_FILE}"="{license_dest_file}" --include-data-file="{restic_source_file}"="{restic_dest_file}" --windows-icon-from-ico="{icon_file}" --output-dir="{OUTPUT_DIR}" bin/{target}'
+    # CMD = f'{PYTHON_EXECUTABLE} -m nuitka --python-flag=no_docstrings --python-flag=-O {NUITKA_OPTIONS} {EXE_OPTIONS} --onefile --include-data-dir="{translations_dir_source}"="{translations_dir_dest}" --include-data-file="{LICENSE_FILE}"="{license_dest_file}" --include-data-file="{restic_source_file}"="{restic_dest_file}" --windows-icon-from-ico="{icon_file}" --output-dir="{OUTPUT_DIR}" bin/{target}'
     CMD = f'{PYTHON_EXECUTABLE} -m nuitka --python-flag=no_docstrings --python-flag=-O {NUITKA_OPTIONS} {EXE_OPTIONS} --onefile --windows-icon-from-ico="{icon_file}" --output-dir="{OUTPUT_DIR}" bin/{target}'
-
 
     print(CMD)
     errors = False
@@ -149,16 +147,15 @@ def compile(arch: str, target: str, has_gui: bool = False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog="netinvent compile.py", description="Compiler script for NetInvent Python projetcs"
+        prog="netinvent compile.py",
+        description="Compiler script for NetInvent Python projetcs",
     )
-    
-    program_version = get_metadata(os.path.join(BASEDIR, "__main__.py"))[
-        "version"
-    ]
+
+    program_version = get_metadata(os.path.join(BASEDIR, "__main__.py"))["version"]
 
     PACKAGE_NAME = "csv2vcard"
-    PACKAGE_DIR="csv2vcard"
-    TARGETS = ['csv2vcard-cli', 'csv2vcard-gui']
+    PACKAGE_DIR = "csv2vcard"
+    TARGETS = ["csv2vcard-cli", "csv2vcard-gui"]
 
     errors = False
     for target in TARGETS:
