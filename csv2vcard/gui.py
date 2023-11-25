@@ -191,6 +191,8 @@ def _interface_entrypoint(config: dict) -> bool:
     """
     Simple wrapper to show loader animation
     """
+    # We get a thread result, hence pylint will complain the thread isn't a tuple
+    # pylint: disable=E1101 (no-member)
     thread = __interface_entrypoint(config)
     while not thread.done() and not thread.cancelled():
         sg.PopupAnimated(
