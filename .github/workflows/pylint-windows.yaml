@@ -24,6 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install --upgrade setuptools
         if (Test-Path "csv2vcard/requirements.txt") { pip install -r csv2vcard/requirements.txt }
+        if (Test-Path "csv2vcard/requirements-gui.txt") { pip install -r csv2vcard/requirements-gui.txt }
     - name: Lint with Pylint
       if: ${{ matrix.python-version == '3.11' }}
       run: |
