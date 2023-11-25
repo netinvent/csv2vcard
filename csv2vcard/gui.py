@@ -9,16 +9,17 @@ __site__ = "github.com/netinvent/csv2vcard"
 __description__ = "Transform CSV files into vCards"
 __copyright__ = "Copyright (C) 2017-2023 Nikolay Dimolarov, Carlos V, Orsiris de Jong"
 __license__ = "MIT License"
-__build__ = "2023112401"
+__build__ = "2023112501"
 __version__ = "0.6.0"
 
 
 from typing import Union
 import sys
-import traceback
+import os
 import json
 from csv2vcard.csv_handler import interface_entrypoint
 from ofunctions.threading import threaded, Future
+import ofunctions.logger_utils
 from csv2vcard.customization import *
 
 try:
@@ -28,7 +29,13 @@ except ImportError as exc:
         "Module not found. If tkinter is missing, you need to install it from your distribution. See README.md file"
     )
     print("Error: {}".format(exc))
-    sys.exit()
+    sys.exit(203)
+
+from csv2vcard.path_helper import CURRENT_DIR
+
+
+LOG_FILE = os.path.join(CURRENT_DIR, "{}.log".format(__intname__))
+logger = ofunctions.logger_utils.logger_get_logger(LOG_FILE)
 
 
 GUI_VARS = [
@@ -165,7 +172,11 @@ def gui_interface():
                 sg.PopupError(f"Could not import config file {config_filename}: {exc}")
         if event == "-CONVERT-":
             config = get_config_from_gui(values)
-            _interface_entrypoint(config)
+            result = _interface_entrypoint(config)
+            if result:
+                sg.Popup("Conversion done")
+            else:
+                sg.Popup("Conversion failed, please see log file")
 
 
 @threaded
@@ -183,8 +194,10 @@ def _interface_entrypoint(config: dict) -> bool:
     thread = __interface_entrypoint(config)
     while not thread.done() and not thread.cancelled():
         sg.PopupAnimated(
-            LOADER_ANIMATION, message="Running conversions", time_between_frames=50,
-                        background_color=GUI_LOADER_COLOR,
+            LOADER_ANIMATION,
+            message="Running conversions",
+            time_between_frames=50,
+            background_color=GUI_LOADER_COLOR,
             text_color=GUI_LOADER_TEXT_COLOR,
         )
     sg.PopupAnimated(None)
@@ -195,12 +208,12 @@ def main():
     try:
         gui_interface()
     except KeyboardInterrupt as exc:
-        print(f"Program interrupted by keyboard. {exc}")
+        logger.critical(f"Program interrupted by keyboard. {exc}")
         # EXIT_CODE 200 = keyboard interrupt
         sys.exit(200)
     except Exception as exc:
-        print(f"Program interrupted by error. {exc}")
-        traceback.print_exc()
+        logger.critical(f"Program interrupted by error. {exc}")
+        logger.critical("Trace:", exc_info=True)
         # EXIT_CODE 201 = Non handled exception
         sys.exit(201)
 

@@ -9,6 +9,10 @@ import base64
 from binascii import Error as binascii_Error
 from datetime import datetime
 import json
+from logging import getLogger
+
+
+logger = getLogger()
 
 
 # Vcard mappings
@@ -158,7 +162,7 @@ def create_vcard(
                             except KeyError:
                                 if num < mapping_len - 1:
                                     vcard_map[idkey] += ";"
-                                print(f"1010: CSV file has no key {sub_key}")
+                                logger.error(f"1010: CSV file has no key {sub_key}")
 
                 else:
                     # Emails are handled here
@@ -171,13 +175,15 @@ def create_vcard(
                                 key == "EMAIL"
                                 and not "@" in contact[mapping[key]["TYPE"][type_key]]
                             ):
-                                print(f"1014: No valid email addres in {contact}")
+                                logger.error(
+                                    f"1014: No valid email addres in {contact}"
+                                )
                                 continue
                             vcard_map[
                                 id
                             ] = f"{key};TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
                     except (KeyError, TypeError):
-                        print(f"1001: CSV file has no key {type_value}")
+                        logger.error(f"1001: CSV file has no key {type_value}")
 
             continue
 
@@ -199,14 +205,14 @@ def create_vcard(
                                 data = data.replace(char, "")
                             fn_entry += data.strip()
                         except KeyError:
-                            print(f"1011: CSV file has no key {sub_key}")
+                            logger.error(f"1011: CSV file has no key {sub_key}")
                 if not fn_entry.strip():
-                    print(f"1012: No Valid FN entry for {contact}")
+                    logger.error(f"1012: No Valid FN entry for {contact}")
                 else:
                     vcard_map[key] = f"{key}:{fn_entry.strip()}"
                 continue
             else:
-                print(
+                logger.error(
                     f"1013: Key {key} with CONCAT does not contain a list of columns to concatenate"
                 )
                 continue
@@ -224,7 +230,7 @@ def create_vcard(
                     except KeyError:
                         if num < mapping_len - 1:
                             vcard_map[key] += ";"
-                        print(f"1002: CSV file has no key {sub_key}")
+                        logger.error(f"1002: CSV file has no key {sub_key}")
             continue
 
         # Handle special cases for KEY, LOGO and PHOTO
@@ -232,7 +238,7 @@ def create_vcard(
             try:
                 contact_value = contact[value].strip()
             except KeyError:
-                print(f"1003: CSV file has no key {value}")
+                logger.error(f"1003: CSV file has no key {value}")
                 continue
 
             if key == "KEY":
@@ -251,7 +257,7 @@ def create_vcard(
                 try:
                     base64.b64decode(contact[value])
                 except (TypeError, binascii_Error):
-                    print(
+                    logger.error(
                         f"1005: Contact key {key} has bogus data (no URI nor B64 encoded data)"
                     )
                     continue
@@ -270,19 +276,19 @@ def create_vcard(
         try:
             data = contact[value]
         except (KeyError, TypeError):
-            print(f"1004: CSV file has no key {value}")
+            logger.error(f"1004: CSV file has no key {value}")
             continue
 
         # Now check that we don't get garbage data
         if key == "GENDER":
             if data.upper() not in ["", "M", "F", "O", "N", "U"]:
-                print(f"1006: Key {key} has invalid gender {data}")
+                logger.error(f"1006: Key {key} has invalid gender {data}")
             elif data:
                 vcard_map[key] = f"{key}:{data.upper()}"
             continue
         elif key == "GEO":
             if not ";" in data:
-                print(f"1007: Key {key} has invalid geo data {data}")
+                logger.error(f"1007: Key {key} has invalid geo data {data}")
             elif data:
                 vcard_map[key] = f"{key}:{data}"
         elif data:
@@ -300,7 +306,7 @@ def create_vcard(
 
     # Foolproof check
     if vcard_map["FN"] == "FN:" or vcard_map["N"] == "N:;;;;;":
-        print(f"1008: Cannot create vcard for contact {contact}")
+        logger.error(f"1008: Cannot create vcard for contact {contact}")
         return None, None
 
     vcard = f"BEGIN:VCARD\nVERSION:{version}.0\n" + vcard_str_content + "END:VCARD\n"
