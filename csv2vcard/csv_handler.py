@@ -107,11 +107,24 @@ def interface_entrypoint(config: dict):
     source = pathlib.Path(settings["csv_filename"])
     sources = []
     if not os.path.exists(source):
+        print(f"Source path does not exist")
         sys.exit(202)
     elif os.path.isdir(source):
         sources = source.glob("**/*.csv")
     else:
         sources = [source]
+
+    if len(settings['csv_delimiter']) != 1:
+        print(f"CSV Delimiter char should be exactly one character")
+        sys.exit(203)
+    
+    max_vcard_file_size = settings["max_vcard_file_size"]
+    if max_vcard_file_size:
+        try:
+            settings["max_vcard_file_size"] = int(max_vcard_file_size)
+        except TypeError:
+            print(f"Max vcard file size should be an integer")
+            sys.exit(204)
 
     for src in sources:
         settings["csv_filename"] = src
