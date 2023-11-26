@@ -5,10 +5,11 @@
 
 
 import os
+import pathlib
 import csv
+from logging import getLogger
 from csv2vcard.export_vcard import check_export_dir, export_vcard
 from csv2vcard.create_vcard import create_vcard
-
 
 try:
     from charset_normalizer import detect
@@ -21,6 +22,9 @@ except ImportError:
     _NORMALIZER = False
 
 
+logger = getLogger()
+
+
 def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None) -> dict:
     """
     Simple csv parser with a ; delimiter
@@ -30,11 +34,11 @@ def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None) -> di
         with open(csv_filename, "rb") as fp:
             # Read first MB of data
             encoding = detect(fp.read(1024**3))["encoding"]
-        print(f"Guessed file encoding: {encoding}")
+        logger.info(f"Guessed file encoding: {encoding}")
     else:
         encoding = "utf-8"
 
-    print("Parsing csv..")
+    logger.info("Parsing csv..")
     try:
         with open(f"{csv_filename}", "r", encoding=encoding) as fh:
             contacts = csv.reader(fh, delimiter=csv_delimiter)
@@ -42,10 +46,10 @@ def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None) -> di
             parsed_contacts = [dict(zip(header, row)) for row in contacts]
             return parsed_contacts
     except OSError as exc:
-        print(f"OS error for {csv_filename}: {exc}")
+        logger.error(f"OS error for {csv_filename}: {exc}")
         return []
     except UnicodeDecodeError as exc:
-        print(
+        logger.error(
             f"Failed to decode file with encoding {encoding}. Try to adjust manually with --encoding parameter"
         )
         return []
@@ -82,7 +86,7 @@ def csv2vcard(
             else:
                 vcards += "\n" + vcard
                 if len(vcards) > max_vcard_file_size:
-                    print(f"Creating sub file for {csv_filename}")
+                    logger.info(f"Creating sub file for {csv_filename}")
                     export_vcard(
                         vcards,
                         output_dir,
@@ -98,3 +102,34 @@ def csv2vcard(
             os.path.basename(csv_filename) + f"{file_num}.vcf",
             strip_accents,
         )
+
+
+def interface_entrypoint(config: dict) -> bool:
+    settings = config["settings"]
+    source = pathlib.Path(settings["csv_filename"])
+    sources = []
+    if not os.path.exists(source):
+        logger.error(f"Source path does not exist")
+        return False
+    elif os.path.isdir(source):
+        sources = source.glob("**/*.csv")
+    else:
+        sources = [source]
+
+    if len(settings["csv_delimiter"]) != 1:
+        logger.error(f"CSV Delimiter char should be exactly one character")
+        return False
+
+    max_vcard_file_size = settings["max_vcard_file_size"]
+    if max_vcard_file_size:
+        try:
+            settings["max_vcard_file_size"] = int(max_vcard_file_size)
+        except TypeError:
+            logger.error(f"Max vcard file size should be an integer")
+            return False
+
+    for src in sources:
+        settings["csv_filename"] = src
+        logger.info(f"Running conversion for {src}")
+        csv2vcard(**settings)
+    return True

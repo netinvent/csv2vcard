@@ -23,6 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install --upgrade setuptools
         if [ -f csv2vcard/requirements.txt ]; then pip install -r csv2vcard/requirements.txt; fi
+        if [ -f csv2vcard/requirements-gui.txt ]; then pip install -r csv2vcard/requirements-gui.txt; fi
     - name: Lint with Pylint
       if: ${{ matrix.python-version == '3.11' }}
       run: |

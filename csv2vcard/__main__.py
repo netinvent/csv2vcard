@@ -9,16 +9,20 @@ __site__ = "github.com/netinvent/csv2vcard"
 __description__ = "Transform CSV files into vCards"
 __copyright__ = "Copyright (C) 2017-2023 Nikolay Dimolarov, Carlos V, Orsiris de Jong"
 __license__ = "MIT License"
-__build__ = "2023112401"
-__version__ = "0.5.1"
+__build__ = "2023112501"
+__version__ = "0.6.0"
 
 
 import os
-import pathlib
 import sys
-import traceback
 from argparse import ArgumentParser
-from csv2vcard import csv_handler
+import ofunctions.logger_utils
+from csv2vcard.csv_handler import interface_entrypoint
+from csv2vcard.path_helper import CURRENT_DIR
+
+
+LOG_FILE = os.path.join(CURRENT_DIR, "{}.log".format(__intname__))
+logger = ofunctions.logger_utils.logger_get_logger(LOG_FILE)
 
 
 def cli_interface():
@@ -113,40 +117,29 @@ This is free software, and you are welcome to redistribute it under certain cond
     version_string = f"{__intname__} {__version__}\n{__description__}\n{__copyright__}"
     print(version_string)
 
-    source = pathlib.Path(args.source)
-    sources = []
-    if not os.path.exists(source):
-        sys.exit(202)
-    elif os.path.isdir(source):
-        sources = source.glob("**/*.csv")
-    else:
-        sources = [source]
-
-    for src in sources:
-        print(f"Running conversion for {src}")
-        csv_handler.csv2vcard(
-            csv_filename=src,
-            csv_delimiter=args.delimiter,
-            mapping_file=args.mapping_file,
-            encoding=args.encoding,
-            output_dir=args.output_dir,
-            vcard_version=args.vcard_version,
-            single_vcard_file=args.single_vcard,
-            max_vcard_file_size=args.max_vcard_file_size,
-            strip_accents=args.strip_accents,
-        )
+    config = {}
+    config["csv_filename"] = args.source
+    config["csv_delimiter"] = args.delimiter
+    config["mapping_file"] = args.mapping_file
+    config["encoding"] = args.encoding
+    config["output_dir"] = args.output_dir
+    config["vcard_version"] = args.vcard_version
+    config["single_vcard_file"] = args.single_vcard
+    config["max_vcard_file_size"] = args.max_vcard_file_size
+    config["strip_accents"] = args.strip_accents
+    interface_entrypoint(config)
 
 
 def main():
     try:
         cli_interface()
     except KeyboardInterrupt as exc:
-        print(f"Program interrupted by keyboard. {exc}")
+        logger.critical(f"Program interrupted by keyboard. {exc}")
         # EXIT_CODE 200 = keyboard interrupt
         sys.exit(200)
     except Exception as exc:
-        print(f"Program interrupted by error. {exc}")
-        traceback.print_exc()
+        logger.critical(f"Program interrupted by error. {exc}")
+        logger.critical("Trace:", exc_info=True)
         # EXIT_CODE 201 = Non handled exception
         sys.exit(201)
 

@@ -8,26 +8,37 @@
 
 A Python script that parses a .csv file of contacts and automatically creates vCards. The vCards are useful for sending your contact details or those of your team. You can also upload them to e.g. Dropbox and use them with QR codes! You can also use them for transferring new contacts to Outlook, a new CRM etc. The specific use case in mind was to programmatically create vCards from a list of contacts in a spreadsheet, to be incorporated into business cards.
 
-As of 0.5.0, csv2vcard has the following new capabilities:
-- supports both vCards version 3.0 and 4.0 (default).  
+As of 0.6.0, csv2vcard has the following new capabilities:
+- CLI and GUI interfaces
+  - Native Windows support through prebuilt executables
+  - Linux support through pip with shell script `csv2vcard-cli`
+- supports both vCards version 3.0 and 4.0 (default)
 - Autodetects file encoding
-- Can use custom CSV mapping files
-- Can generate a single vCard file containing all contacts from a CSV file
+- Can use custom CSV mapping files, with nested values mapping
+- Generate a single vCard file containing all contacts from a CSV file
   - Can split single vCard file into smaller chunks for webmails that don't like them (eg Grommunio 2023.11 does not accept more than about 80kb per file)
-- Can be launched directly from shell via `csv2vcard` if python executable is in path environment
-- Supports Logo, Photo and PGP keys as links or inline base64
-- Supports multiple CSV files when directory given
+- Supports Logo, Photo and PGP vCard keys as links or inline base64
+- Parse multiple CSV files when directory given
 - Optionally remove accents from vCards
 - Basic data validation
+- GUI Settings import and export for quick pre-configuration
 
 ## Usage
 
+### Windows usage
+
+Download the pre-built executable directly from the [release page](https://github.com/netinvent/csv2vcard/releases)  
+Download the optional mappings or settings files, and you're set to go.
+
+![image](.github/img/gui-0.6.0.png)
+
+### Linux / Windows / MacOS X usage
 
 Requirements: Runs on Linux, Windows (and probably macos too), using Python 3.6+
 
-1. Install **old** package with `python3 -m pip install csv2vcard` (original package)
+1. Install **this updated** package with `pip install git+https://github.com/netinvent/csv2vcard.git@0.6.0` (package with all new fancy stuff)
 
-1a. Install **this updated** package with `pip install git+https://github.com/netinvent/csv2vcard.git@0.5.1` (package with all new fancy stuff)
+Once installed, the scripts `csv2vcard-cli` and `csv2vcard-gui` will be available. Note that you'll need to install extra requirements for the GUI to work, namely `pip install PySimpleGUI ofunctions.threading`
 
 2. Accepted CSV file format
 
@@ -40,12 +51,12 @@ There's no need for those columns to be in a specific order for the script to wo
 
 *CSV file format (delimeter can be changed in csv_delimeter param, see below)*
 
-3. Run program with `csv2vcard -s /path/to/csv/file.csv -o /path/to/output_dir`
+3. Run program with `csv2vcard-cli -s /path/to/csv/file.csv -o /path/to/output_dir`
 
 
 ## Advanced usage
 
-`csv2vcard` accepts the following custom parameters:
+`csv2vcard-cli` accepts the following custom parameters:
 
 | Parameter                                          | Role                                                       |
 |----------------------------------------------------|------------------------------------------------------------|
@@ -62,23 +73,11 @@ There's no need for those columns to be in a specific order for the script to wo
 
 ## Custom mappings
 
-By default, the above CSV columns are mapped to vCards.
-
-Since vCard has nested values, the mapping file needs to be nested too.  
-Some values like FormattedName (`FN`) can be string concatenations of Title, FirstName, LastName. These must use the form:
-```
-    "FN": {"CONCAT": ["Title", "FirstName", "LastName]}
-```
-
-Other properties must concatenate columns with a separator, as Name (`N`) property. They must use the following syntax:
-```
-    "N": ["last_name", "first_name", "second_name", "title", "suffix"],
-```
-The order of the above list follows the syntax of vCard standards.
-
+By default, the CSV columns mentionned earlier are all mapped to vCards.  
+csv2vcard supports custom vCard mappings, that can have nested values or multiple mappings.  
+Mapping are written in JSON, and represent a dictionnary of vCard keys, with values being corresponding CSV column names.
 
 The default mapping included in csv2vcard looks like the following:
-
 ```
 {
     "ADR": {
@@ -135,9 +134,22 @@ The default mapping included in csv2vcard looks like the following:
 }
 ```
 
-Another example of Orange Business webmail CSV exports can be found in the mappings directory.
+Since vCard has nested values, the mapping file needs to be nested too.  
+Some values like FormattedName (`FN`) can be string concatenations. In our case, the CSV fields `Title`, `FirstName` and `LastName` will be concatenated into the `FN` property. Concatenations must use the form:
+```
+    "FN": {"CONCAT": ["Title", "FirstName", "LastName]}
+```
 
-** If you make a good mapping for a known service, please make a pull request or simply post them in an issue so I can add it to the mappings directory, Thanks**
+Other properties must concatenate columns with a separator, just as the Name (`N`) property. They must use the following syntax, representing each CSV column that shall be used in a list:
+```
+    "N": ["last_name", "first_name", "second_name", "title", "suffix"],
+```
+The order of the above list follows the syntax of vCard standards.
+
+You can create our own custom mapping to read your random CSV file provider format.
+An example of Orange Business webmail CSV exports can be found in the mappings directory of this project
+
+** If you make a good mapping for a known service (eg Outlook, gmail, yahoo...), please make a pull request or simply post them in an issue so I can add it to the mappings directory, Thanks**
 
 ## Inline base64
 
@@ -156,14 +168,16 @@ Simple checks are performed on:
 
 ## Examples
 
-On Windows
-Convert an Orange webmail CSV export to vCards compatible with Grommunio web import (max 80kb size without accents)
+#### Convert an Orange webmail CSV export to vCards compatible with Grommunio web import (max 80kb size without accents)  
+- GUI
+Convert an Orange webmail CSV export to Grommunio compatible single vCard files
+![image](.github/img/gui-example-orange-webmail-config.png)
 
+- On Windows CLI
 ```
 csv2vcard.cmd -s "c:\contacts" -o "c:\contacts\vcards" --single-vcard -m mappings\orange_webmail.json --delimiter , --max-vcard-size 80 --strip-accents
 ```
-
-On Linux
+- On Linux CLI
 ```
 csv2vcard -s /contacts -o /contacts/vcards --single-vcard -m /opt/mappigs/orange_webmail.json --delimiter , --max-vcard-size 80 --strip-accents
 ```

@@ -6,6 +6,10 @@
 
 import os
 import unicodedata
+from logging import getLogger
+
+
+logger = getLogger()
 
 
 def strip_accents(string):
@@ -32,9 +36,9 @@ def export_vcard(vcard: str, output_dir: str, filename: str, normalize: bool = F
         with open(filepath, "w", encoding="utf-8") as fp:
             fp.write(vcard)
             fp.close()
-            print(f"Created vCard for {filename}")
+            logger.info(f"Created vCard for {filename}")
     except OSError as exc:
-        print(f"Could not write file {filepath}: {exc}")
+        logger.critical(f"Could not write file {filepath}: {exc}")
 
 
 def check_export_dir(output_dir: str) -> None:
@@ -42,5 +46,5 @@ def check_export_dir(output_dir: str) -> None:
     Checks if export folder exists in directory
     """
     if not os.path.exists(output_dir):
-        print(f"Creating {output_dir} folder...")
+        logger.info(f"Creating {output_dir} folder...")
         os.makedirs(output_dir)
