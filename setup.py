@@ -83,11 +83,14 @@ gui_requirements = parse_requirements(os.path.join(package_path, "requirements-g
 long_description = _read_file("README.md")
 
 if os.name == "nt":
-    scripts = ["misc/csv2vcard.cmd"]
+    scripts = ["misc/csv2vcard-cli.cmd"]
     console_scripts = []
 else:
     scripts = []
-    console_scripts = ["csv2vcard = csv2vcard.__main__:main"]
+    console_scripts = [
+        "csv2vcard-cli = csv2vcard.__main__:main",
+        "csv2vcard-gui = csv2ccard.gui:main"
+    ]
 
 setuptools.setup(
     name=PACKAGE_NAME,
@@ -96,7 +99,7 @@ setuptools.setup(
     install_requires=requirements,
     extra_requirements={
         "gui": gui_requirements
-    }
+    },
     description=DESCRIPTION,
     long_description=long_description,
     long_description_content_type="text/markdown",
