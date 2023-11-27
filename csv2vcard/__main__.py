@@ -9,8 +9,8 @@ __site__ = "github.com/netinvent/csv2vcard"
 __description__ = "Transform CSV files into vCards"
 __copyright__ = "Copyright (C) 2017-2023 Nikolay Dimolarov, Carlos V, Orsiris de Jong"
 __license__ = "MIT License"
-__build__ = "2023112501"
-__version__ = "0.6.0"
+__build__ = "2023112701"
+__version__ = "0.6.1"
 
 
 import os
@@ -117,16 +117,16 @@ This is free software, and you are welcome to redistribute it under certain cond
     version_string = f"{__intname__} {__version__}\n{__description__}\n{__copyright__}"
     print(version_string)
 
-    config = {}
-    config["csv_filename"] = args.source
-    config["csv_delimiter"] = args.delimiter
-    config["mapping_file"] = args.mapping_file
-    config["encoding"] = args.encoding
-    config["output_dir"] = args.output_dir
-    config["vcard_version"] = args.vcard_version
-    config["single_vcard_file"] = args.single_vcard
-    config["max_vcard_file_size"] = args.max_vcard_file_size
-    config["strip_accents"] = args.strip_accents
+    config = {"settings": {}}
+    config["settings"]["csv_filename"] = args.source
+    config["settings"]["csv_delimiter"] = args.delimiter
+    config["settings"]["mapping_file"] = args.mapping_file
+    config["settings"]["encoding"] = args.encoding
+    config["settings"]["output_dir"] = args.output_dir
+    config["settings"]["vcard_version"] = args.vcard_version
+    config["settings"]["single_vcard_file"] = args.single_vcard
+    config["settings"]["max_vcard_file_size"] = args.max_vcard_file_size
+    config["settings"]["strip_accents"] = args.strip_accents
     interface_entrypoint(config)
 
 
