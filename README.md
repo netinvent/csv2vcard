@@ -163,7 +163,7 @@ Simple checks are performed on:
 - KEY, LOGO and PHOTO properties (check if begins with http(s) or if value is base64 encoded)
 - GENDER which required to be a single character according to vCard standard
 - GEO which requires to be two floats separated by a semi-column
-- EMAIL which requires an arobase sign (TODO: update to RFC822 validation)
+- EMAIL which will check email address against RFC822
 
 
 ## Examples

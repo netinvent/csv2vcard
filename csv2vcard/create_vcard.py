@@ -10,6 +10,7 @@ from binascii import Error as binascii_Error
 from datetime import datetime
 import json
 from logging import getLogger
+from email.utils import parseaddr
 
 
 logger = getLogger()
@@ -22,7 +23,7 @@ logger = getLogger()
 # ANNIVERSARY:YYYYMMJJ|ISO8601-date
 # BDAY:YYYYMMJJ|ISO8601-date
 # CATEGORGIES:[comma separated tags]
-# EMAIL:[emailadr]
+# EMAIL,TYPE=HOME|WORK:[emailadr]
 # FN:[Formatted Name]                                                       << Optional in v2, required in v3 and v4
 # GENDER:'':M|F|O|N|U                                                       # Only exists in v4
 # GEO:lat;long                                                              # V3 syntax
@@ -171,13 +172,14 @@ def create_vcard(
                             mapping[key]["TYPE"][type_key]
                             and contact[mapping[key]["TYPE"][type_key]]
                         ):
-                            if (
-                                key == "EMAIL"
-                                and not "@" in contact[mapping[key]["TYPE"][type_key]]
-                            ):
-                                logger.error(
-                                    f"1014: No valid email addres in {contact}"
-                                )
+                            if key == "EMAIL":
+                                # parseaddr() returns a tuple of displayname, emailaddr or tuple None,None
+                                # Makes RFC822 email addr validation
+                                _, email = parseaddr(contact[mapping[key]["TYPE"][type_key]])
+                                if not email:
+                                    logger.error(
+                                        f"1014: No valid email addres in {contact}"
+                                    )
                                 continue
                             vcard_map[
                                 id
