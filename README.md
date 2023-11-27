@@ -45,7 +45,7 @@ Once installed, the scripts `csv2vcard-cli` and `csv2vcard-gui` will be availabl
 Any CSV file format is accepted using custom mappings (see below)  
 By default, the following columns are recognized:  
 
-`"postbox_home","address_home","city_home","region_home","zip_home","country_home","postbox","address","city","region","zip","country", "anniversary","birthday","categories","email_home","email","title","last_name","first_name","gender","geo","key",logo","last_name","first_name", "second_name", "title","suffix","remarks","nickname","company","photo","role","fax_home","pager_home","phone_home","video_phone_home","text_phone_home","text_home","mobile_phone","fax","pager","phone","video_phone","text_phone","text","title","timezone","uuid","webpage"`
+`"postbox_home","address_home","city_home","region_home","zip_home","country_home","postbox","address","city","region","zip","country","anniversary","birthday","categories","email_home","email","title","last_name","first_name","gender","geo","key",logo","last_name","first_name","second_name", "title","suffix","remarks","nickname","company","photo","role","fax_home","pager_home","phone_home","video_phone_home","text_phone_home","text_home","mobile_phone","fax","pager","phone","video_phone","text_phone","text","title","timezone","uuid","webpage"`
 
 There's no need for those columns to be in a specific order for the script to work, as long as they are spelled right.  
 
