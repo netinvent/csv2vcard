@@ -175,7 +175,9 @@ def create_vcard(
                             if key == "EMAIL":
                                 # parseaddr() returns a tuple of displayname, emailaddr or tuple None,None
                                 # Makes RFC822 email addr validation
-                                _, email = parseaddr(contact[mapping[key]["TYPE"][type_key]])
+                                _, email = parseaddr(
+                                    contact[mapping[key]["TYPE"][type_key]]
+                                )
                                 if not email:
                                     logger.error(
                                         f"1014: No valid email addres in {contact}"

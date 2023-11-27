@@ -47,11 +47,11 @@ def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None) -> di
 
             # Clean possible ugly CSV files where some jack*ss inserted \r\n or so between fields
             parsed_contacts = []
-            pattern = re.compile(r'\n|\t|\r')
+            pattern = re.compile(r"\n|\t|\r")
             for row in contacts:
-                row = [pattern.sub('', sub) for sub in row]
+                row = [pattern.sub("", sub) for sub in row]
                 parsed_contacts.append(dict(zip(header, row)))
-            #parsed_contacts = [dict(zip(header, row)) for row in contacts]
+            # parsed_contacts = [dict(zip(header, row)) for row in contacts]
             return parsed_contacts
     except OSError as exc:
         logger.error(f"OS error for {csv_filename}: {exc}")

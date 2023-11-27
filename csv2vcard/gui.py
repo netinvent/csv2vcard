@@ -70,7 +70,9 @@ def update_gui_from_config(window: sg.Window, config: dict) -> bool:
         window[f"-{gui_var}-"].update(value)
 
     # Special fix for max_vcard_file_size
-    window["-max_vcard_file_size-"].update(disabled=not config["settings"]["single_vcard_file"]])
+    window["-max_vcard_file_size-"].update(
+        disabled=not config["settings"]["single_vcard_file"]
+    )
 
     return True
 
