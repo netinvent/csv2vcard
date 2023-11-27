@@ -1,2 +1,4 @@
 charset_normalizer
 ofunctions.logger_utils
+ofunctions.string_handling
+ofunctions.misc>=1.6.0
