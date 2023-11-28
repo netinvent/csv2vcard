@@ -47,6 +47,7 @@ GUI_VARS = [
     "vcard_version",
     "single_vcard_file",
     "max_vcard_file_size",
+    "max_vcards_per_file",
     "strip_accents",
 ]
 
@@ -54,7 +55,14 @@ GUI_VARS = [
 def get_config_from_gui(values: dict) -> Union[dict, bool]:
     config = {"software": {"name": __intname__}, "settings": {}}
     for gui_var in GUI_VARS:
-        config["settings"][gui_var] = values[f"-{gui_var}-"]
+        # handle ints before passing them to interface
+        if gui_var in ["vcard_version", "max_vcard_file_size", "max_vcards_per_file"]:
+            try:
+                config["settings"][gui_var] = int(values[f"-{gui_var}-"])
+            except ValueError:
+                config["settings"][gui_var] = None
+        else:
+            config["settings"][gui_var] = values[f"-{gui_var}-"]
 
     return config
 
@@ -68,6 +76,14 @@ def update_gui_from_config(window: sg.Window, config: dict) -> bool:
         return False
     for gui_var, value in config["settings"].items():
         window[f"-{gui_var}-"].update(value)
+
+    # Special fix for max_vcard_file_size and max_vcards_per_file
+    window["-max_vcard_file_size-"].update(
+        disabled=not config["settings"]["single_vcard_file"]
+    )
+    window["-max_vcards_per_file-"].update(
+        disabled=not config["settings"]["single_vcard_file"]
+    )
 
     return True
 
@@ -118,11 +134,17 @@ def gui_interface():
         [
             sg.Checkbox(
                 "Create a single vCard file from a CSV",
+                size=(35, 1),
                 key="-single_vcard_file-",
                 enable_events=True,
             ),
-            sg.Text("Max vCard file size (KB)"),
-            sg.In(size=(10, 1), key="-max_vcard_file_size-", disabled=True),
+            sg.Text("Max vCard file size (KB)", size=(20, 1)),
+            sg.In(size=(6, 1), key="-max_vcard_file_size-", disabled=True),
+        ],
+        [
+            sg.Text("", size=(38, 1)),
+            sg.Text("Max vCards per file", size=(20, 1)),
+            sg.In(size=(6, 1), key="-max_vcards_per_file-", disabled=True),
         ],
         [sg.Checkbox("Strip accents from vCards", key="-strip_accents-")],
         [
@@ -148,6 +170,9 @@ def gui_interface():
             break
         if event == "-single_vcard_file-":
             window["-max_vcard_file_size-"].update(
+                disabled=not values["-single_vcard_file-"]
+            )
+            window["-max_vcards_per_file-"].update(
                 disabled=not values["-single_vcard_file-"]
             )
         if event == "-EXPORT_SETTINGS_FILENAME-":

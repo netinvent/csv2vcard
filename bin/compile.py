@@ -24,9 +24,8 @@ Nuitka compilation script tested for
 import sys
 import os
 import argparse
-import atexit
 from command_runner import command_runner
-from ofunctions.platform import python_arch, get_os
+from ofunctions.platform import python_arch
 
 
 # Insert parent dir as path se we get to use our package

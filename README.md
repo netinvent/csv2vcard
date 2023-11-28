@@ -65,7 +65,8 @@ There's no need for those columns to be in a specific order for the script to wo
 | --h|--help                                         | Shows help                                                 |
 | --delimiter <any single character like `;`, `,`>   | Changes default delimiter `;`                              |
 | --single-vcard                                     | Creates a single vCard file containing all the contacts    |
-| --max-vcard-file-size <integer>                    | Limits single vcard files to max (kb) size                 |
+| --max-vcard-file-size <integer>                    | Limits single vCard files to max (kb) size                 |
+| --max-vcards-per-file <integer>                    | Limits single vCard files to maximium vcards               |
 | --vcard-version <3|4>                              | Chooses which vCard version to generate (defaults to 4)    |
 | --encoding <python known encoding string>          | Replaces automagically detected file encoding              |
 | -m|--mapping <path_to_json_mapping_file>           | Replaces default mapping with custom one (see below)       |
@@ -163,7 +164,7 @@ Simple checks are performed on:
 - KEY, LOGO and PHOTO properties (check if begins with http(s) or if value is base64 encoded)
 - GENDER which required to be a single character according to vCard standard
 - GEO which requires to be two floats separated by a semi-column
-- EMAIL which requires an arobase sign (TODO: update to RFC822 validation)
+- EMAIL which will check email address against RFC822
 
 
 ## Examples
@@ -175,9 +176,9 @@ Convert an Orange webmail CSV export to Grommunio compatible single vCard files
 
 - On Windows CLI
 ```
-csv2vcard.cmd -s "c:\contacts" -o "c:\contacts\vcards" --single-vcard -m mappings\orange_webmail.json --delimiter , --max-vcard-size 80 --strip-accents
+csv2vcard.cmd -s "c:\contacts" -o "c:\contacts\vcards" --single-vcard -m mappings\orange_webmail.json --delimiter , --max-vcards-per-file 490 --strip-accents
 ```
 - On Linux CLI
 ```
-csv2vcard -s /contacts -o /contacts/vcards --single-vcard -m /opt/mappigs/orange_webmail.json --delimiter , --max-vcard-size 80 --strip-accents
+csv2vcard -s /contacts -o /contacts/vcards --single-vcard -m /opt/mappigs/orange_webmail.json --delimiter , --max-vcards-per-file 490 --strip-accents
 ```
