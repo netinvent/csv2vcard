@@ -107,6 +107,15 @@ This is free software, and you are welcome to redistribute it under certain cond
     )
 
     parser.add_argument(
+        "--max-vcards-per-file",
+        type=int,
+        dest="max_vcards_per_file",
+        default=None,
+        required=False,
+        help="Optional max number of vCards in a single vCard file",
+    )
+
+    parser.add_argument(
         "--strip-accents",
         action="store_true",
         default=False,
@@ -126,6 +135,7 @@ This is free software, and you are welcome to redistribute it under certain cond
     config["settings"]["vcard_version"] = args.vcard_version
     config["settings"]["single_vcard_file"] = args.single_vcard
     config["settings"]["max_vcard_file_size"] = args.max_vcard_file_size
+    config["settings"]["max_vcards_per_file"] = args.max_vcards_per_file
     config["settings"]["strip_accents"] = args.strip_accents
     interface_entrypoint(config)
 
