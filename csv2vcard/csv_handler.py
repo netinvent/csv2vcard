@@ -9,9 +9,10 @@ import pathlib
 import csv
 from logging import getLogger
 import re
+import unicodedata
 from csv2vcard.export_vcard import check_export_dir, export_vcard
 from csv2vcard.create_vcard import create_vcard
-
+from ofunctions.string_handling import convert_accents
 try:
     from charset_normalizer import detect
 
@@ -26,7 +27,7 @@ except ImportError:
 logger = getLogger()
 
 
-def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None) -> dict:
+def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None, strip_accents: bool = True) -> dict:
     """
     Simple csv parser with a ; delimiter
     """
@@ -36,21 +37,31 @@ def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None) -> di
             # Read first MB of data
             encoding = detect(fp.read(1024**3))["encoding"]
         logger.info(f"Guessed file encoding: {encoding}")
-    else:
+    elif not encoding:
         encoding = "utf-8"
 
     logger.info("Parsing csv..")
     try:
         with open(f"{csv_filename}", "r", encoding=encoding) as fh:
             contacts = csv.reader(fh, delimiter=csv_delimiter)
-            header = next(contacts)  # saves header
+            header = next(contacts)
+            if strip_accents:
+                header_parsed = []
+                for col in header:
+                    header_parsed.append(convert_accents(col))
 
             # Clean possible ugly CSV files where some jack*ss inserted \r\n or so between fields
+            # Also opt in to remove accents when file encoding is unclear
             parsed_contacts = []
             pattern = re.compile(r"\n|\t|\r")
             for row in contacts:
-                row = [pattern.sub("", sub) for sub in row]
-                parsed_contacts.append(dict(zip(header, row)))
+                row_parsed = []
+                for col in row:
+                    col_parsed = pattern.sub("", col)
+                    if strip_accents:
+                        col_parsed = convert_accents(col_parsed)
+                    row_parsed.append(col_parsed)
+                parsed_contacts.append(dict(zip(header_parsed, row_parsed)))
             # parsed_contacts = [dict(zip(header, row)) for row in contacts]
             return parsed_contacts
     except OSError as exc:
@@ -58,8 +69,9 @@ def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None) -> di
         return []
     except UnicodeDecodeError as exc:
         logger.error(
-            f"Failed to decode file with encoding {encoding}. Try to adjust manually with --encoding parameter"
+            f"Failed to decode file with encoding {encoding}. Try to adjust manually with --encoding parameter. Good test values are 'ansi', 'cp850', 'cp1250', 'unicode_escape'... See Python encodings for more."
         )
+        logger.error(f"Error: {exc}")
         return []
 
 
@@ -72,6 +84,7 @@ def csv2vcard(
     vcard_version: int = 4,
     single_vcard_file: bool = False,
     max_vcard_file_size: int = None,
+    max_vcards_per_file: int = None,
     strip_accents: bool = False,
 ) -> None:
     """
@@ -87,29 +100,35 @@ def csv2vcard(
     else:
         max_vcard_file_size = None
         file_num = ""
-    for contact in parse_csv(csv_filename, csv_delimiter, encoding):
+    if max_vcards_per_file:
+        file_num = 1
+    else:
+        file_num = ""
+    count = 0
+    for contact in parse_csv(csv_filename, csv_delimiter, encoding, strip_accents):
         vcard, filename = create_vcard(contact, vcard_version, mapping_file)
         if vcard:
+            count += 1
             if not single_vcard_file:
-                export_vcard(vcard, output_dir, filename, strip_accents)
+                export_vcard(vcard, output_dir, filename)
             else:
                 vcards += "\n" + vcard
-                if max_vcard_file_size and len(vcards) > max_vcard_file_size:
+                if (max_vcard_file_size and len(vcards) > max_vcard_file_size) \
+                or (max_vcards_per_file and count >= max_vcards_per_file):
                     logger.info(f"Creating sub file for {csv_filename}")
                     export_vcard(
                         vcards,
                         output_dir,
                         os.path.basename(csv_filename) + f"{file_num}.vcf",
-                        strip_accents,
                     )
                     file_num = str(int(file_num) + 1)
                     vcards = ""
+                    count = 0
     if single_vcard_file:
         export_vcard(
             vcards,
             output_dir,
             os.path.basename(csv_filename) + f"{file_num}.vcf",
-            strip_accents,
         )
 
 
