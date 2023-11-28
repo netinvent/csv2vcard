@@ -13,6 +13,7 @@ import unicodedata
 from csv2vcard.export_vcard import check_export_dir, export_vcard
 from csv2vcard.create_vcard import create_vcard
 from ofunctions.string_handling import convert_accents
+
 try:
     from charset_normalizer import detect
 
@@ -27,7 +28,12 @@ except ImportError:
 logger = getLogger()
 
 
-def parse_csv(csv_filename: str, csv_delimiter: str, encoding: str = None, strip_accents: bool = True) -> dict:
+def parse_csv(
+    csv_filename: str,
+    csv_delimiter: str,
+    encoding: str = None,
+    strip_accents: bool = True,
+) -> dict:
     """
     Simple csv parser with a ; delimiter
     """
@@ -113,8 +119,9 @@ def csv2vcard(
                 export_vcard(vcard, output_dir, filename)
             else:
                 vcards += "\n" + vcard
-                if (max_vcard_file_size and len(vcards) > max_vcard_file_size) \
-                or (max_vcards_per_file and count >= max_vcards_per_file):
+                if (max_vcard_file_size and len(vcards) > max_vcard_file_size) or (
+                    max_vcards_per_file and count >= max_vcards_per_file
+                ):
                     logger.info(f"Creating sub file for {csv_filename}")
                     export_vcard(
                         vcards,

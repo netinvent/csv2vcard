@@ -125,7 +125,10 @@ def load_mapping_file(mapping_file: str):
 
 
 def create_vcard(
-    contact: dict, version: int = 4, mapping_file: dict = None, strip_accents: bool = True
+    contact: dict,
+    version: int = 4,
+    mapping_file: dict = None,
+    strip_accents: bool = True,
 ) -> Tuple[str, str]:
     """
     The mappings used below are from https://www.w3.org/TR/vcard-rdf/#Mapping
@@ -168,7 +171,9 @@ def create_vcard(
                             except KeyError:
                                 if num < mapping_len - 1:
                                     composite_result += ";"
-                                logger.error(f"1010: Mapping {key} has no match in CSV file {sub_key}")
+                                logger.error(
+                                    f"1010: Mapping {key} has no match in CSV file {sub_key}"
+                                )
                     # Drop if result = ADDR,TYPE=HOME:;;;;
                     if composite_result != ";;;;":
                         vcard_map[idkey] = f"{key};TYPE={type_key}:{composite_result}"
@@ -195,7 +200,9 @@ def create_vcard(
                                 id
                             ] = f"{key};TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
                     except (KeyError, TypeError):
-                        logger.error(f"1001: Mapping {key} has no match in CSV file {type_value}")
+                        logger.error(
+                            f"1001: Mapping {key} has no match in CSV file {type_value}"
+                        )
 
             continue
 
@@ -217,7 +224,9 @@ def create_vcard(
                                 data = data.replace(char, "")
                             fn_entry += data.strip()
                         except KeyError:
-                            logger.error(f"1011: Mapping {key} has no match in CSV file {sub_key}")
+                            logger.error(
+                                f"1011: Mapping {key} has no match in CSV file {sub_key}"
+                            )
                 if not fn_entry.strip():
                     logger.error(f"1012: No Valid FN entry for {contact}")
                 else:
@@ -242,7 +251,9 @@ def create_vcard(
                     except KeyError:
                         if num < mapping_len - 1:
                             vcard_map[key] += ";"
-                        logger.error(f"1002: Mapping {key} has no match in CSV file {sub_key}")
+                        logger.error(
+                            f"1002: Mapping {key} has no match in CSV file {sub_key}"
+                        )
             continue
 
         # Handle special cases for KEY, LOGO and PHOTO
@@ -294,13 +305,17 @@ def create_vcard(
         # Now check that we don't get garbage data
         if key == "GENDER":
             if data.upper() not in ["", "M", "F", "O", "N", "U"]:
-                logger.error(f"1006: Key {key} has invalid gender {data} in CSV file map {value}")
+                logger.error(
+                    f"1006: Key {key} has invalid gender {data} in CSV file map {value}"
+                )
             elif data:
                 vcard_map[key] = f"{key}:{data.upper()}"
             continue
         elif key == "GEO":
             if not ";" in data:
-                logger.error(f"1007: Key {key} has invalid geo data {data} in CSV file map {value}")
+                logger.error(
+                    f"1007: Key {key} has invalid geo data {data} in CSV file map {value}"
+                )
             elif data:
                 vcard_map[key] = f"{key}:{data}"
         elif data:

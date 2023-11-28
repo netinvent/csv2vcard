@@ -85,7 +85,6 @@ def update_gui_from_config(window: sg.Window, config: dict) -> bool:
         disabled=not config["settings"]["single_vcard_file"]
     )
 
-
     return True
 
 
@@ -134,7 +133,8 @@ def gui_interface():
         ],
         [
             sg.Checkbox(
-                "Create a single vCard file from a CSV", size=(35, 1),
+                "Create a single vCard file from a CSV",
+                size=(35, 1),
                 key="-single_vcard_file-",
                 enable_events=True,
             ),
@@ -142,7 +142,6 @@ def gui_interface():
             sg.In(size=(6, 1), key="-max_vcard_file_size-", disabled=True),
         ],
         [
-            
             sg.Text("", size=(38, 1)),
             sg.Text("Max vCards per file", size=(20, 1)),
             sg.In(size=(6, 1), key="-max_vcards_per_file-", disabled=True),
