@@ -36,7 +36,7 @@ Download the optional mappings or settings files, and you're set to go.
 
 Requirements: Runs on Linux, Windows (and probably macos too), using Python 3.6+
 
-1. Install **this updated** package with `pip install git+https://github.com/netinvent/csv2vcard.git@0.6.0` (package with all new fancy stuff)
+1. Install **this updated** package with `pip install git+https://github.com/netinvent/csv2vcard.git@0.6.1` (package with all new fancy stuff)
 
 Once installed, the scripts `csv2vcard-cli` and `csv2vcard-gui` will be available. Note that you'll need to install extra requirements for the GUI to work, namely `pip install PySimpleGUI ofunctions.threading`
 
