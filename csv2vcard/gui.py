@@ -9,8 +9,8 @@ __site__ = "github.com/netinvent/csv2vcard"
 __description__ = "Transform CSV files into vCards"
 __copyright__ = "Copyright (C) 2017-2023 Nikolay Dimolarov, Carlos V, Orsiris de Jong"
 __license__ = "MIT License"
-__build__ = "2023112501"
-__version__ = "0.6.0"
+__build__ = "2025122801"
+__version__ = "0.6.1"
 
 
 from typing import Union
@@ -20,10 +20,18 @@ import json
 from csv2vcard.csv_handler import interface_entrypoint
 from ofunctions.threading import threaded, Future
 import ofunctions.logger_utils
-from csv2vcard.customization import *
+from csv2vcard.customization import (
+    COMPANY_NAME,
+    PRODUCT_NAME,
+    PYSIMPLEGUI_THEME,
+    OEM_ICON,
+    GUI_LOADER_COLOR,
+    GUI_LOADER_TEXT_COLOR,
+    LOADER_ANIMATION,
+)
 
 try:
-    import PySimpleGUI as sg
+    import FreeSimpleGUI as sg
 except ImportError as exc:
     print(
         "Module not found. If tkinter is missing, you need to install it from your distribution. See README.md file"
@@ -94,7 +102,7 @@ def gui_interface():
     """
 
     sg.theme(PYSIMPLEGUI_THEME)
-    sg.SetOptions(icon=OEM_ICON)
+    sg.set_options(icon=OEM_ICON)
 
     main_col = [
         [
@@ -162,7 +170,7 @@ def gui_interface():
         ],
     ]
 
-    window = sg.Window(f"NetInvent csv2vCard GUI {__version__}", main_col)
+    window = sg.Window(f"{COMPANY_NAME} {PRODUCT_NAME} GUI {__version__}", main_col)
 
     while True:
         event, values = window.read()
