@@ -196,9 +196,9 @@ def create_vcard(
                                         f"1014: No valid email addres in {contact}"
                                     )
                                     continue
-                            vcard_map[
-                                id
-                            ] = f"{key};TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
+                            vcard_map[id] = (
+                                f"{key};TYPE={type_key}:{contact[mapping[key]['TYPE'][type_key]]}"
+                            )
                     except (KeyError, TypeError):
                         logger.error(
                             f"1001: Mapping {key} has no match in CSV file {type_value}"
@@ -286,13 +286,13 @@ def create_vcard(
                     continue
 
                 if version == 3:
-                    vcard_map[
-                        key
-                    ] = f"{key};TYPE={data_type[3]};ENCODING=b:{contact[value]}"
+                    vcard_map[key] = (
+                        f"{key};TYPE={data_type[3]};ENCODING=b:{contact[value]}"
+                    )
                 if version == 4:
-                    vcard_map[
-                        key
-                    ] = f"{key};data:{data_type[4]};base64,{contact[value]}"
+                    vcard_map[key] = (
+                        f"{key};data:{data_type[4]};base64,{contact[value]}"
+                    )
             continue
 
         # Handle all other scenarios
