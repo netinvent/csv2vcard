@@ -9,8 +9,8 @@ __site__ = "github.com/netinvent/csv2vcard"
 __description__ = "Transform CSV files into vCards"
 __copyright__ = "Copyright (C) 2017-2023 Nikolay Dimolarov, Carlos V, Orsiris de Jong"
 __license__ = "MIT License"
-__build__ = "2023112501"
-__version__ = "0.6.0"
+__build__ = "2025122801"
+__version__ = "0.6.1"
 
 
 from typing import Union
@@ -23,7 +23,7 @@ import ofunctions.logger_utils
 from csv2vcard.customization import *
 
 try:
-    import PySimpleGUI as sg
+    import FreeSimpleGUI as sg
 except ImportError as exc:
     print(
         "Module not found. If tkinter is missing, you need to install it from your distribution. See README.md file"
