@@ -264,6 +264,8 @@ def create_vcard(
                 logger.error(f"1003: Mapping {key} has no match in CSV file {value}")
                 continue
 
+            # pylint E0606 (possibly-used-before-assignment) fix
+            data_type = {3: "", 4: ""}
             if key == "KEY":
                 data_type = {3: "PGP", 4: "application/pgp-keys"}
             if key == "LOGO":
