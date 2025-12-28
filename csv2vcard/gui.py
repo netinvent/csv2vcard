@@ -20,7 +20,15 @@ import json
 from csv2vcard.csv_handler import interface_entrypoint
 from ofunctions.threading import threaded, Future
 import ofunctions.logger_utils
-from csv2vcard.customization import COMPANY_NAME, PRODUCT_NAME, PYSIMPLEGUI_THEME, OEM_ICON, GUI_LOADER_COLOR, GUI_LOADER_TEXT_COLOR, LOADER_ANIMATION
+from csv2vcard.customization import (
+    COMPANY_NAME,
+    PRODUCT_NAME,
+    PYSIMPLEGUI_THEME,
+    OEM_ICON,
+    GUI_LOADER_COLOR,
+    GUI_LOADER_TEXT_COLOR,
+    LOADER_ANIMATION,
+)
 
 try:
     import FreeSimpleGUI as sg
