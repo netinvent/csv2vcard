@@ -9,8 +9,8 @@ __site__ = "github.com/netinvent/csv2vcard"
 __description__ = "Transform CSV files into vCards"
 __copyright__ = "Copyright (C) 2017-2023 Nikolay Dimolarov, Carlos V, Orsiris de Jong"
 __license__ = "MIT License"
-__build__ = "2023112701"
-__version__ = "0.6.1"
+__build__ = "2025122801"
+__version__ = "0.6.2"
 
 
 import os

@@ -10,7 +10,7 @@ __description__ = "Transform CSV files into vCards"
 __copyright__ = "Copyright (C) 2017-2023 Nikolay Dimolarov, Carlos V, Orsiris de Jong"
 __license__ = "MIT License"
 __build__ = "2025122801"
-__version__ = "0.6.1"
+__version__ = "0.6.2"
 
 
 from typing import Union
